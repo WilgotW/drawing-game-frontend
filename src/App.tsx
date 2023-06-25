@@ -16,6 +16,8 @@ function App() {
     setActiveWord(word);
   }
 
+  useEffect;
+
   return (
     <div className="app-main-container">
       {!activeWord && (
