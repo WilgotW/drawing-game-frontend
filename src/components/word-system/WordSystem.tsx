@@ -43,10 +43,7 @@ export default function WordSystem({
 
   useEffect(() => {
     if (hiddenWord.includes("_")) {
-      console.log("continue");
       beginRevealing();
-    } else {
-      console.log("no left");
     }
   }, [hiddenWord]);
 
@@ -55,7 +52,6 @@ export default function WordSystem({
       let nonExistingNum: number;
       do {
         nonExistingNum = randomIntegerNum(0, word.length - 1);
-        console.log(nonExistingNum);
       } while (
         revealedLetters.includes(nonExistingNum) ||
         word[nonExistingNum] === " "
@@ -74,7 +70,7 @@ export default function WordSystem({
 
       const updatedHiddenWord = updatedHiddenWordArray.join("");
       setHiddenWord(updatedHiddenWord);
-    }, 1000);
+    }, 8000);
   }
 
   useEffect(() => {
