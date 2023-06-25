@@ -1,0 +1,33 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap");
+* {
+  font-family: "Roboto", sans-serif;
+  padding: 0;
+  margin: 0;
+}
+canvas {
+  border: solid black 2px;
+}
+.app-main-container {
+  display: flex;
+}
+.select-word-container {
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  background: rgba(52, 183, 235, 0.5);
+}
+.word-selection-buttons {
+  height: 400px;
+}
+
+.word-select-button {
+  cursor: pointer;
+  width: 100px;
+  height: 35px;
+  border-radius: 20px;
+  border: none;
+  transition: 0.2s ease;
+}
+.word-select-button:hover {
+  transform: scale(1.1);
+}
