@@ -6,7 +6,7 @@
   cursor: pointer;
 }
 .color-option:hover {
-  filter: brightness(150%);
+  /* filter: brightness(105%); */
   border: solid white 1px;
   transform: scale(1.05);
 }

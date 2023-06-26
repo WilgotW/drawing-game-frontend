@@ -205,9 +205,10 @@ export default function DrawingSpace({
           <div
             className="mouse-follower"
             style={{
+              border: "solid black 1px",
               position: "absolute",
-              top: mousePosition.y,
-              left: mousePosition.x,
+              top: mousePosition.y + 4,
+              left: mousePosition.x + 6,
               width: `${penWidth * 2}px`,
               height: `${penWidth * 2}px`,
               borderRadius: "50%",

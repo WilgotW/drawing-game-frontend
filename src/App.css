@@ -14,6 +14,7 @@ canvas:hover {
   display: flex;
 }
 .select-word-container {
+  z-index: 10;
   width: 100%;
   height: 100vh;
   position: absolute;
