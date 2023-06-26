@@ -32,6 +32,8 @@ export default function DrawingSpace({
   const [releasedMouse, setReleasedMouse] = useState<boolean>(false);
   const [pressedMouse, setPressedMouse] = useState<boolean>(false);
 
+  const [isCanvasHovered, setIsCanvasHovered] = useState(false);
+
   const sendMessage = () => {
     socket.emit("send_message", { message: "Hello" });
   };
@@ -88,14 +90,26 @@ export default function DrawingSpace({
       setReleasedMouse(true);
     };
 
+    const handleMouseEnter = () => {
+      setIsCanvasHovered(true);
+    };
+
+    const handleMouseLeave = () => {
+      setIsCanvasHovered(false);
+    };
+
     canvas.addEventListener("mousemove", handleMouseMove);
     canvas.addEventListener("mousedown", handleMouseDown);
     canvas.addEventListener("mouseup", handleMouseUp);
+    canvas.addEventListener("mouseenter", handleMouseEnter);
+    canvas.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
       canvas.removeEventListener("mousemove", handleMouseMove);
       canvas.removeEventListener("mousedown", handleMouseDown);
       canvas.removeEventListener("mouseup", handleMouseUp);
+      canvas.addEventListener("mouseenter", handleMouseEnter);
+      canvas.addEventListener("mouseleave", handleMouseLeave);
     };
   }
 
@@ -171,6 +185,7 @@ export default function DrawingSpace({
 
   useEffect(() => {
     draw();
+    //draw cursor:
   }, [mousePosition]);
 
   useEffect(() => {
@@ -178,13 +193,31 @@ export default function DrawingSpace({
   }, [allDrawPoints]);
   return (
     <div>
-      <div className="draw-window">
-        <canvas ref={canvasRef}></canvas>
+      <div
+        className="draw-window"
+        style={{ position: "relative", width: "100%", height: "100%" }}
+      >
+        <canvas
+          ref={canvasRef}
+          style={{ width: "100%", height: "100%" }}
+        ></canvas>
+        {isCanvasHovered && (
+          <div
+            className="mouse-follower"
+            style={{
+              position: "absolute",
+              top: mousePosition.y,
+              left: mousePosition.x,
+              width: `${penWidth * 2}px`,
+              height: `${penWidth * 2}px`,
+              borderRadius: "50%",
+              background: activeColor,
+              pointerEvents: "none",
+              transform: "translate(-50%, -50%)",
+            }}
+          ></div>
+        )}
       </div>
-      <div>
-        x: {mousePosition.x} y: {mousePosition.y}
-      </div>
-      <p>Mouse is {isMouseDown ? "pressed" : "not pressed"}</p>
     </div>
   );
 }

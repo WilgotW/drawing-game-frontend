@@ -2,6 +2,13 @@
   width: 50px;
   height: 50px;
   border: solid black 2px;
+  transition: 0.1s ease;
+  cursor: pointer;
+}
+.color-option:hover {
+  filter: brightness(150%);
+  border: solid white 1px;
+  transform: scale(1.05);
 }
 .color-options-container {
   width: fit-content;

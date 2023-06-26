@@ -7,6 +7,9 @@
 canvas {
   border: solid black 2px;
 }
+canvas:hover {
+  cursor: none;
+}
 .app-main-container {
   display: flex;
 }
