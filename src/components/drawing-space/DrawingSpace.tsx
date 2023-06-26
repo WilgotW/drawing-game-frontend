@@ -183,6 +183,21 @@ export default function DrawingSpace({
     }
   }
 
+  function undo() {
+    console.log(allDrawPoints);
+    let removeLast: DrawPointsProps[] = [];
+    if (allDrawPoints.length >= 10) {
+      removeLast = [...allDrawPoints.slice(0, -10)];
+      socket.emit("add_point", removeLast);
+    } else if (allDrawPoints) {
+      removeLast = [...allDrawPoints.slice(0, -1)];
+    }
+    socket.emit("add_point", removeLast);
+
+    c.fillStyle = "white";
+    c?.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
   useEffect(() => {
     draw();
     //draw cursor:
@@ -219,6 +234,7 @@ export default function DrawingSpace({
           ></div>
         )}
       </div>
+      <button onClick={() => undo()}>undo</button>
     </div>
   );
 }
