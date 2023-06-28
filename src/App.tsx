@@ -10,19 +10,47 @@ function App() {
   const [penWidth, setPenWidth] = useState<number>(5);
 
   const [activeWord, setActiveWord] = useState<string>("");
-  const [allWords, setAllWords] = useState<string[]>([]); // Update type to string[]
+  const [allWords, setAllWords] = useState<string[]>([]);
   const [randomWords, setRandomWords] = useState<string[]>([]);
+
+  const [playerId, setPlayerId] = useState<string>("");
+  const [playersTurn, setPlayersTurn] = useState<boolean>(false);
 
   function selectWord(word: string) {
     setActiveWord(word);
   }
 
-  socket.on("connect", () => {
-    console.log("in");
-  });
+  useEffect(() => {
+    socket.on("player_info", (player) => {
+      console.log(player.playerId);
+      setPlayerId(player.playerId);
+    });
+
+    socket.on("start_round", (playerTurn) => {
+      console.log("Starting round");
+      startGame(playerTurn);
+    });
+
+    return () => {
+      socket.off("player_info");
+      socket.off("start_round");
+    };
+  }, []);
+
+  function startGame(id: string) {
+    console.log("Starting game");
+    if (id === playerId) {
+      console.log("It's my turn");
+      setPlayersTurn(true);
+    } else {
+      console.log("It's not my turn");
+      setPlayersTurn(false);
+    }
+  }
+
   return (
     <div className="app-main-container">
-      {!activeWord && (
+      {!activeWord && playersTurn && (
         <div className="select-word-container">
           <div
             style={{
@@ -70,13 +98,19 @@ function App() {
           randomWords={randomWords}
           setRandomWords={setRandomWords}
         />
-        <DrawingSpace activeColor={activeColor} penWidth={penWidth} />
+        <DrawingSpace
+          playersTurn={playersTurn}
+          activeColor={activeColor}
+          penWidth={penWidth}
+        />
       </div>
-      <PenOptions
-        setActiveColor={setActiveColor}
-        setPenWidth={setPenWidth}
-        penWidth={penWidth}
-      />
+      {playersTurn && (
+        <PenOptions
+          setActiveColor={setActiveColor}
+          setPenWidth={setPenWidth}
+          penWidth={penWidth}
+        />
+      )}
     </div>
   );
 }

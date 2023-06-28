@@ -10,11 +10,13 @@ interface DrawPointsProps {
 }
 
 interface IProps {
+  playersTurn: boolean;
   activeColor: string;
   penWidth: number;
 }
 
 export default function DrawingSpace({
+  playersTurn,
   activeColor = "black",
   penWidth = 2,
 }: IProps) {
@@ -200,8 +202,9 @@ export default function DrawingSpace({
   }
 
   useEffect(() => {
-    draw();
-    //draw cursor:
+    if (playersTurn) {
+      draw();
+    }
   }, [mousePosition]);
 
   useEffect(() => {
