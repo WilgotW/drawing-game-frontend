@@ -3,6 +3,7 @@ import DrawingSpace from "./components/drawing-space/DrawingSpace";
 import { useEffect, useState } from "react";
 import PenOptions from "./components/pen-options/PenOptions";
 import WordSystem from "./components/word-system/WordSystem";
+import { socket } from "./socket";
 
 function App() {
   const [activeColor, setActiveColor] = useState<string>("black");
@@ -16,8 +17,9 @@ function App() {
     setActiveWord(word);
   }
 
-  useEffect;
-
+  socket.on("connect", () => {
+    console.log("in");
+  });
   return (
     <div className="app-main-container">
       {!activeWord && (

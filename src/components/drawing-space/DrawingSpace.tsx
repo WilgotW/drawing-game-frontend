@@ -38,8 +38,6 @@ export default function DrawingSpace({
     socket.emit("send_message", { message: "Hello" });
   };
 
-  socket.on("connect", () => {});
-
   socket.on("point_update", (points) => {
     setAllDrawPoints(points);
   });
@@ -187,15 +185,18 @@ export default function DrawingSpace({
     console.log(allDrawPoints);
     let removeLast: DrawPointsProps[] = [];
     if (allDrawPoints.length >= 10) {
+      console.log("okj");
       removeLast = [...allDrawPoints.slice(0, -10)];
-      socket.emit("add_point", removeLast);
     } else if (allDrawPoints) {
+      console.log("ew");
       removeLast = [...allDrawPoints.slice(0, -1)];
     }
+    removeLast[removeLast.length - 1].endPoint = true;
+
     socket.emit("add_point", removeLast);
 
-    c.fillStyle = "white";
-    c?.fillRect(0, 0, canvas.width, canvas.height);
+    c ? (c.fillStyle = "white") : null;
+    canvas && c?.fillRect(0, 0, canvas.width, canvas.height);
   }
 
   useEffect(() => {
