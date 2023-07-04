@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import randomIntegerNum from "../../functions/randomIntegerNum";
 import "./WordSystem.css";
+import { socket } from "../../socket";
 
 interface IProps {
   word: string;
@@ -10,6 +11,7 @@ interface IProps {
   setAllWords: React.Dispatch<React.SetStateAction<string[]>>;
   randomWords: string[];
   setRandomWords: React.Dispatch<React.SetStateAction<string[]>>;
+  playersTurn: boolean;
 }
 
 export default function WordSystem({
@@ -20,9 +22,14 @@ export default function WordSystem({
   setAllWords,
   randomWords,
   setRandomWords,
+  playersTurn,
 }: IProps) {
   const [hiddenWord, setHiddenWord] = useState<string>("");
   const [revealedLetters, setRevealedLetters] = useState<number[]>([]);
+
+  // socket.on("word_update", (hidden) => {
+  //   setHiddenWord(hidden);
+  // });
 
   useEffect(() => {
     if (hiddenWord.includes("_") || !word) {
@@ -38,7 +45,11 @@ export default function WordSystem({
       }
     }
     setHiddenWord(hiddenString);
-    // beginRevealing();
+    const data = {
+      word: word,
+      hiddenWord: hiddenString,
+    };
+    socket.emit("word_update", data);
   }, [word]);
 
   useEffect(() => {
@@ -70,24 +81,30 @@ export default function WordSystem({
 
       const updatedHiddenWord = updatedHiddenWordArray.join("");
       setHiddenWord(updatedHiddenWord);
+
+      const data = {
+        word: word,
+        hiddenWord: updatedHiddenWord,
+      };
+      socket.emit("word_update", data);
     }, 8000);
   }
 
-  useEffect(() => {
-    fetch("../public/wordList.txt")
-      .then((response) => response.text())
-      .then((content) => {
-        if (content) {
-          const words = content
-            .replace(/\r\n/g, "")
-            .split(".")
-            .map((word) => word.trim());
+  // useEffect(() => {
+  //   fetch("../public/wordList.txt")
+  //     .then((response) => response.text())
+  //     .then((content) => {
+  //       if (content) {
+  //         const words = content
+  //           .replace(/\r\n/g, "")
+  //           .split(".")
+  //           .map((word) => word.trim());
 
-          setAllWords(words.slice(0, words.length - 1));
-        }
-      })
-      .catch((error) => console.error("Error fetching file:", error));
-  }, []);
+  //         setAllWords(words.slice(0, words.length - 1));
+  //       }
+  //     })
+  //     .catch((error) => console.error("Error fetching file:", error));
+  // }, []);
 
   useEffect(() => {
     if (allWords.length > 0) {
