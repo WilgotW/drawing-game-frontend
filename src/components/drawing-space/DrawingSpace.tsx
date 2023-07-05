@@ -238,7 +238,7 @@ export default function DrawingSpace({
           ></div>
         )}
       </div>
-      <button onClick={() => undo()}>undo</button>
+      {/* <button onClick={() => undo()}>undo</button> */}
     </div>
   );
 }

@@ -45,32 +45,32 @@ function App() {
 
   return (
     <div className="app-main-container">
-      {revealingWord && <div>{revealingWord}</div>}
       {playersTurn && !revealingWord && <WordPopup randomWords={randomWords} />}
-      <div>
-        {/* <WordSystem
-          word={activeWord}
-          activeWord={activeWord}
-          setActiveWord={setActiveWord}
-          allWords={allWords}
-          setAllWords={setAllWords}
-          randomWords={randomWords}
-          setRandomWords={setRandomWords}
-          playersTurn={playersTurn}
-        /> */}
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <div
+          style={{
+            height: "100px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {revealingWord && <h1 className="revealing-word">{revealingWord}</h1>}
+        </div>
         <DrawingSpace
           playersTurn={playersTurn}
           activeColor={activeColor}
           penWidth={penWidth}
         />
+        {playersTurn && (
+          <PenOptions
+            setActiveColor={setActiveColor}
+            activeColor={activeColor}
+            setPenWidth={setPenWidth}
+            penWidth={penWidth}
+          />
+        )}
       </div>
-      {playersTurn && (
-        <PenOptions
-          setActiveColor={setActiveColor}
-          setPenWidth={setPenWidth}
-          penWidth={penWidth}
-        />
-      )}
     </div>
   );
 }

@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "@mui/material/Slider";
 import "./PenOptions.css";
+import fetchItems from "../../functions/fetchItems";
 interface IProps {
   setActiveColor: React.Dispatch<React.SetStateAction<string>>;
+  activeColor: string;
   setPenWidth: React.Dispatch<React.SetStateAction<number>>;
   penWidth: number;
 }
 export default function PenOptions({
   setActiveColor,
+  activeColor,
   setPenWidth,
   penWidth,
 }: IProps) {
@@ -20,12 +23,23 @@ export default function PenOptions({
     }
   }
 
-  function changeColor(color: string) {
-    setActiveColor(color);
-  }
+  const [colors, setColors] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await fetchItems("colors.txt");
+        setColors(result);
+      } catch (error) {
+        console.error("Error fetching items:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <div className="pen-options-main-container">
-      <div
+      {/* <div
         style={{
           width: "400px",
           height: "200px",
@@ -54,143 +68,43 @@ export default function PenOptions({
             />
           </div>
         </div>
-      </div>
+      </div> */}
       <div
         style={{
-          width: "400px",
-          height: "500px",
+          width: "fit-content",
+          height: "fit-content",
           display: "flex",
           justifyContent: "center",
+          alignItems: "center",
         }}
       >
+        <div
+          style={{
+            width: "42px",
+            height: "42px",
+            background: activeColor,
+          }}
+        ></div>
         <div className="color-options-container">
-          <div
-            className="color-option"
-            onClick={() => changeColor("#FF0000 ")}
-            style={{ background: "#FF0000 " }}
-          ></div>
-          <div
-            className="color-option"
-            onClick={() => changeColor("#FF3300 ")}
-            style={{ background: "#FF3300 " }}
-          ></div>
-          <div
-            className="color-option"
-            onClick={() => changeColor("#FF6600 ")}
-            style={{ background: "#FF6600 " }}
-          ></div>
-          <div
-            className="color-option"
-            onClick={() => changeColor("#FF9900 ")}
-            style={{ background: "#FF9900 " }}
-          ></div>
-          <div
-            className="color-option"
-            onClick={() => changeColor("#FFCC00 ")}
-            style={{ background: "#FFCC00 " }}
-          ></div>
-          <div
-            className="color-option"
-            onClick={() => changeColor("#FFFF00 ")}
-            style={{ background: "#FFFF00 " }}
-          ></div>
-          <div
-            className="color-option"
-            onClick={() => changeColor("#CCFF00 ")}
-            style={{ background: "#CCFF00 " }}
-          ></div>
-          <div
-            className="color-option"
-            onClick={() => changeColor("#99FF00")}
-            style={{ background: "#99FF00" }}
-          ></div>
-          <div
-            className="color-option"
-            onClick={() => changeColor("#66FF00 ")}
-            style={{ background: "#66FF00 " }}
-          ></div>
-          <div
-            className="color-option"
-            onClick={() => changeColor("#33FF00 ")}
-            style={{ background: "#33FF00 " }}
-          ></div>
-          <div
-            className="color-option"
-            onClick={() => changeColor("#00FF33")}
-            style={{ background: "#00FF33" }}
-          ></div>
-          <div
-            className="color-option"
-            onClick={() => changeColor("#00FF66")}
-            style={{ background: "#00FF66" }}
-          ></div>
-          <div
-            className="color-option"
-            onClick={() => changeColor("#00FF99")}
-            style={{ background: "#00FF99" }}
-          ></div>
-          <div
-            className="color-option"
-            onClick={() => changeColor("#00FFCC")}
-            style={{ background: "#00FFCC" }}
-          ></div>
-          <div
-            className="color-option"
-            onClick={() => changeColor("#00FFFF")}
-            style={{ background: "#00FFFF" }}
-          ></div>
-          <div
-            className="color-option"
-            onClick={() => changeColor("#0099FF")}
-            style={{ background: "#0099FF" }}
-          ></div>
-          <div
-            className="color-option"
-            onClick={() => changeColor("#0033FF")}
-            style={{ background: "#0033FF" }}
-          ></div>
-          <div
-            className="color-option"
-            onClick={() => changeColor("#0033FF ")}
-            style={{ background: "#0033FF" }}
-          ></div>
-
-          <div
-            className="color-option"
-            onClick={() => changeColor("#0000FF")}
-            style={{ background: "#0000FF" }}
-          ></div>
-          <div
-            className="color-option"
-            onClick={() => changeColor("#3300CC")}
-            style={{ background: "#3300CC" }}
-          ></div>
-          <div
-            className="color-option"
-            onClick={() => changeColor("#660099")}
-            style={{ background: "#660099" }}
-          ></div>
-          <div
-            className="color-option"
-            onClick={() => changeColor("#663300")}
-            style={{ background: "#663300" }}
-          ></div>
-          <div
-            className="color-option"
-            onClick={() => changeColor("#E9DCC9")}
-            style={{ background: "#E9DCC9" }}
-          ></div>
-
-          <div
-            className="color-option"
-            onClick={() => changeColor("white")}
-            style={{ background: "white" }}
-          ></div>
-          <div
-            className="color-option"
-            onClick={() => changeColor("black")}
-            style={{ background: "black" }}
-          ></div>
+          {colors.map((color) => (
+            <div
+              className="color-option"
+              onClick={() => setActiveColor(color)}
+              style={{ background: color }}
+            ></div>
+          ))}
+        </div>
+        <div className="pen-widths">
+          <div className="pen-width-button">
+            <div
+              style={{
+                background: "black",
+                borderRadius: "100px",
+                width: "10px",
+                height: "10px",
+              }}
+            ></div>
+          </div>
         </div>
       </div>
     </div>
