@@ -1,5 +1,5 @@
 import { socket } from "../../socket";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 
 interface DrawPointsProps {
   x: number;
@@ -27,46 +27,25 @@ export default function DrawingSpace({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [canvas, setCanvas] = useState<HTMLCanvasElement>();
   const [c, setC] = useState<CanvasRenderingContext2D>();
-
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
   const [allDrawPoints, setAllDrawPoints] = useState<DrawPointsProps[]>([]);
+  const [isCanvasHovered, setIsCanvasHovered] = useState(false);
 
-  const [pointMax, setPointMax] = useState<number>(0);
-  const [pointIter, setPointIter] = useState<number>(0);
   const [releasedMouse, setReleasedMouse] = useState<boolean>(false);
   const [pressedMouse, setPressedMouse] = useState<boolean>(false);
 
-  const [isCanvasHovered, setIsCanvasHovered] = useState(false);
+  const debouncedDraw = useCallback(debounce(draw, 10), [mousePosition]);
 
-  const sendMessage = () => {
-    socket.emit("send_message", { message: "Hello" });
-  };
-
-  socket.on("point_update", (points) => {
-    setAllDrawPoints(points);
-  });
-
-  socket.on("point_removed", (newPoints) => {
-    setAllDrawPoints(newPoints);
-
-    c ? (c.fillStyle = "white") : null;
-    canvas && c?.fillRect(0, 0, canvas.width, canvas.height);
-  });
-
-  useEffect(() => {
-    if (!canvas && !c) return;
-    c.fillStyle = "white";
-    c.fillRect(0, 0, canvas.width, canvas.height);
-    mouseController();
-  }, [c]);
+  const debouncedSmoothDrawPoints = useCallback(
+    debounce(smoothDrawPoints, 10),
+    [allDrawPoints]
+  );
 
   useEffect(() => {
     if (canvas) {
       const _c = canvas.getContext("2d")!;
       setC(_c);
-
       canvas.width = 1000;
       canvas.height = 700;
     }
@@ -76,12 +55,45 @@ export default function DrawingSpace({
     setCanvas(canvasRef.current!);
   }, []);
 
-  function mouseController() {
-    if (!canvas) {
-      return;
-    }
+  useEffect(() => {
+    if (!canvas || !c) return;
+    c.fillStyle = "white";
+    c.fillRect(0, 0, canvas.width, canvas.height);
+    mouseController();
+  }, [c]);
 
-    const handleMouseMove = (event: MouseEvent) => {
+  useEffect(() => {
+    socket.on("point_update", (points) => {
+      setAllDrawPoints((prevPoints) => [...prevPoints, points]);
+    });
+
+    socket.on("point_removed", (newPoints) => {
+      setAllDrawPoints(newPoints);
+      c?.clearRect(0, 0, canvas.width, canvas.height);
+      smoothDrawPointsAll();
+    });
+
+    return () => {
+      socket.off("point_update");
+      socket.off("point_removed");
+    };
+  }, [c, canvas]);
+
+  function debounce(func, delay) {
+    let timeoutId;
+
+    return function (...args) {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        func.apply(this, args);
+      }, delay);
+    };
+  }
+
+  function mouseController() {
+    if (!canvas) return;
+
+    const handleMouseMove = (event) => {
       const rect = canvas.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
@@ -119,14 +131,24 @@ export default function DrawingSpace({
       canvas.removeEventListener("mousemove", handleMouseMove);
       canvas.removeEventListener("mousedown", handleMouseDown);
       canvas.removeEventListener("mouseup", handleMouseUp);
-      canvas.addEventListener("mouseenter", handleMouseEnter);
-      canvas.addEventListener("mouseleave", handleMouseLeave);
+      canvas.removeEventListener("mouseenter", handleMouseEnter);
+      canvas.removeEventListener("mouseleave", handleMouseLeave);
     };
   }
 
   function draw() {
     if (!canvas || !c) return;
 
+    if (isMouseDown && mousePosition) {
+      const newPoint = {
+        x: mousePosition.x,
+        y: mousePosition.y,
+        color: activeColor,
+        size: penWidth,
+        endPoint: false,
+      };
+      socket.emit("add_point", newPoint);
+    }
     if (releasedMouse && pressedMouse) {
       const newPoint = {
         x: mousePosition.x,
@@ -135,31 +157,13 @@ export default function DrawingSpace({
         size: penWidth,
         endPoint: true,
       };
-      socket.emit("add_point", [...allDrawPoints, newPoint]);
-      setReleasedMouse(false);
+      socket.emit("add_point", newPoint);
       setPressedMouse(false);
-    }
-
-    if (isMouseDown && mousePosition) {
-      if (pointIter <= pointMax) {
-        setPointIter((prev) => prev + 1);
-        return;
-      }
-
-      const newPoint = {
-        x: mousePosition.x,
-        y: mousePosition.y,
-        color: activeColor,
-        size: penWidth,
-        endPoint: false,
-      };
-      socket.emit("add_point", [...allDrawPoints, newPoint]);
-
-      setPointIter(0);
+      setReleasedMouse(false);
     }
   }
 
-  function smoothDrawPoints() {
+  function smoothDrawPointsAll() {
     if (!c) return;
 
     for (let i = 0; i < allDrawPoints.length; i++) {
@@ -168,8 +172,6 @@ export default function DrawingSpace({
         c.lineWidth = allDrawPoints[i].size * 2;
         c.beginPath();
         c.moveTo(allDrawPoints[i].x, allDrawPoints[i].y);
-        // c.lineTo(allDrawPoints[i + 1].x, allDrawPoints[i + 1].y);
-        // c.stroke();
         const controlPointX = (allDrawPoints[i].x + allDrawPoints[i + 1].x) / 2;
         const controlPointY = (allDrawPoints[i].y + allDrawPoints[i + 1].y) / 2;
         c.quadraticCurveTo(
@@ -194,15 +196,43 @@ export default function DrawingSpace({
     }
   }
 
+  function smoothDrawPoints() {
+    if (!c || allDrawPoints.length < 2) return;
+
+    const point1 = allDrawPoints[allDrawPoints.length - 2];
+    const point2 = allDrawPoints[allDrawPoints.length - 1];
+
+    console.log(point1);
+
+    if (!point1.endPoint) {
+      c.strokeStyle = point2.color;
+      c.lineWidth = point2.size * 2;
+      c.beginPath();
+      c.moveTo(point1.x, point1.y);
+      c.quadraticCurveTo(
+        (point1.x + point2.x) / 2,
+        (point1.y + point2.y) / 2,
+        point2.x,
+        point2.y
+      );
+      c.stroke();
+    }
+
+    c.fillStyle = point2.color;
+    c.beginPath();
+    c.arc(point2.x, point2.y, point2.size, 0, Math.PI * 2);
+    c.fill();
+  }
+
   function undo() {
     if (allDrawPoints.length < 1) {
       return;
     }
     let removeLast: DrawPointsProps[] = [];
     if (allDrawPoints.length >= 11) {
-      removeLast = [...allDrawPoints.slice(0, -10)];
+      removeLast = allDrawPoints.slice(0, -10);
     } else if (allDrawPoints) {
-      removeLast = [...allDrawPoints.slice(0, -1)];
+      removeLast = allDrawPoints.slice(0, -1);
     }
 
     if (allDrawPoints.length > 1)
@@ -220,12 +250,21 @@ export default function DrawingSpace({
   useEffect(() => {
     if (playersTurn) {
       draw();
+      smoothDrawPoints();
     }
   }, [mousePosition]);
 
   useEffect(() => {
     smoothDrawPoints();
   }, [allDrawPoints]);
+  useEffect(() => {
+    if (!isCanvasHovered && allDrawPoints.length > 1) {
+      let point = allDrawPoints[allDrawPoints.length - 1];
+      point.endPoint = true;
+      socket.emit("add_point", point);
+      setIsMouseDown(false);
+    }
+  }, [isCanvasHovered]);
   return (
     <div>
       <div
