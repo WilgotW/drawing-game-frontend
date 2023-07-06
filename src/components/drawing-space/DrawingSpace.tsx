@@ -69,8 +69,8 @@ export default function DrawingSpace({
 
     socket.on("point_removed", (newPoints) => {
       setAllDrawPoints(newPoints);
-      c?.clearRect(0, 0, canvas.width, canvas.height);
-      smoothDrawPointsAll();
+      c.fillStyle = "white";
+      c?.fillRect(0, 0, canvas.width, canvas.height);
     });
 
     return () => {
@@ -78,6 +78,36 @@ export default function DrawingSpace({
       socket.off("point_removed");
     };
   }, [c, canvas]);
+
+  useEffect(() => {
+    if (doUndo) {
+      undo();
+    }
+  }, [doUndo]);
+
+  useEffect(() => {
+    if (playersTurn) {
+      draw();
+      smoothDrawPoints();
+    }
+  }, [mousePosition]);
+
+  useEffect(() => {
+    if (!undo) {
+      smoothDrawPoints();
+    } else {
+      smoothDrawPointsAll();
+      setDoUndo(false);
+    }
+  }, [allDrawPoints]);
+  useEffect(() => {
+    if (!isCanvasHovered && allDrawPoints.length > 1) {
+      let point = allDrawPoints[allDrawPoints.length - 1];
+      point.endPoint = true;
+      socket.emit("add_point", point);
+      setIsMouseDown(false);
+    }
+  }, [isCanvasHovered]);
 
   function debounce(func, delay) {
     let timeoutId;
@@ -202,8 +232,6 @@ export default function DrawingSpace({
     const point1 = allDrawPoints[allDrawPoints.length - 2];
     const point2 = allDrawPoints[allDrawPoints.length - 1];
 
-    console.log(point1);
-
     if (!point1.endPoint) {
       c.strokeStyle = point2.color;
       c.lineWidth = point2.size * 2;
@@ -228,43 +256,20 @@ export default function DrawingSpace({
     if (allDrawPoints.length < 1) {
       return;
     }
-    let removeLast: DrawPointsProps[] = [];
+
+    let removeAmount: number;
     if (allDrawPoints.length >= 11) {
-      removeLast = allDrawPoints.slice(0, -10);
+      removeAmount = 10;
     } else if (allDrawPoints) {
-      removeLast = allDrawPoints.slice(0, -1);
+      removeAmount = 1;
     }
 
-    if (allDrawPoints.length > 1)
-      removeLast[removeLast.length - 1].endPoint = true;
+    // if (allDrawPoints.length > 1)
+    //   removeLast[removeLast.length - 1].endPoint = true;
 
-    socket.emit("point_undo", removeLast);
+    socket.emit("point_undo", removeAmount);
   }
-  useEffect(() => {
-    if (doUndo) {
-      undo();
-      setDoUndo(false);
-    }
-  }, [doUndo]);
 
-  useEffect(() => {
-    if (playersTurn) {
-      draw();
-      smoothDrawPoints();
-    }
-  }, [mousePosition]);
-
-  useEffect(() => {
-    smoothDrawPoints();
-  }, [allDrawPoints]);
-  useEffect(() => {
-    if (!isCanvasHovered && allDrawPoints.length > 1) {
-      let point = allDrawPoints[allDrawPoints.length - 1];
-      point.endPoint = true;
-      socket.emit("add_point", point);
-      setIsMouseDown(false);
-    }
-  }, [isCanvasHovered]);
   return (
     <div>
       <div

@@ -37,3 +37,7 @@ canvas:hover {
   font-size: 30px;
   font-weight: 300;
 }
+.top-container {
+  width: 100%;
+  height: fit-content;
+}

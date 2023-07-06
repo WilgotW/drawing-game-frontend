@@ -5,6 +5,9 @@ import PenOptions from "./components/pen-options/PenOptions";
 import WordSystem from "./components/word-system/WordSystem";
 import { socket } from "./socket";
 import WordPopup from "./components/word-popup/WordPopup";
+import RevealingWord from "./components/revealing-word/RevealingWord";
+import PlayersList from "./components/players-list/PlayersList";
+import GuessChat from "./components/guess-chat/GuessChat";
 
 function App() {
   const [activeColor, setActiveColor] = useState<string>("black");
@@ -20,26 +23,18 @@ function App() {
   const [revealingWord, setRevealingWord] = useState<string>("");
 
   const [doUndo, setDoUndo] = useState<boolean>(false);
-  // useEffect(() => {
-  //   console.log("ehe");
-  //   return () => {
-  //     socket.off("player_info");
-  //     socket.off("start_round");
-  //   };
-  // }, []);
 
-  socket.on("player_info", (player) => {
-    console.log("ehehheh");
+  socket.on("player_info", (player: any) => {
     console.log(player.playerId);
     setPlayerId(player.playerId);
   });
 
-  socket.on("start_round", (words) => {
+  socket.on("start_round", (words: string[]) => {
     setRandomWords(words);
     setPlayersTurn(true);
   });
 
-  socket.on("word_update", (word) => {
+  socket.on("word_update", (word: string) => {
     setRevealingWord(word);
   });
 
@@ -47,44 +42,29 @@ function App() {
     <div className="app-main-container">
       {playersTurn && !revealingWord && <WordPopup randomWords={randomWords} />}
       <div style={{ display: "flex", flexDirection: "column" }}>
-        <div
-          style={{
-            height: "100px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          {revealingWord && (
-            <div
-              style={{
-                width: `${revealingWord.length * 25}px`,
-                minWidth: "200px",
-              }}
-              className="revealing-word"
-            >
-              {revealingWord.split("").map((letter, index) => (
-                <h1 key={index}>{letter}</h1>
-              ))}
-            </div>
-          )}
+        <RevealingWord revealingWord={revealingWord} />
+        <div style={{ display: "flex", gap: "10px" }}>
+          <PlayersList />
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <DrawingSpace
+              playersTurn={playersTurn}
+              activeColor={activeColor}
+              penWidth={penWidth}
+              doUndo={doUndo}
+              setDoUndo={setDoUndo}
+            />
+            {playersTurn && (
+              <PenOptions
+                setActiveColor={setActiveColor}
+                activeColor={activeColor}
+                setPenWidth={setPenWidth}
+                penWidth={penWidth}
+                setDoUndo={setDoUndo}
+              />
+            )}
+          </div>
+          <GuessChat />
         </div>
-        <DrawingSpace
-          playersTurn={playersTurn}
-          activeColor={activeColor}
-          penWidth={penWidth}
-          doUndo={doUndo}
-          setDoUndo={setDoUndo}
-        />
-        {playersTurn && (
-          <PenOptions
-            setActiveColor={setActiveColor}
-            activeColor={activeColor}
-            setPenWidth={setPenWidth}
-            penWidth={penWidth}
-            setDoUndo={setDoUndo}
-          />
-        )}
       </div>
     </div>
   );
