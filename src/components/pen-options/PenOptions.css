@@ -19,7 +19,12 @@
   display: grid;
   grid-template-columns: repeat(12, 1fr);
 }
+.pen-widths-container {
+  display: flex;
+  gap: 5px;
+}
 .pen-width-button {
+  cursor: pointer;
   width: 50px;
   height: 50px;
   display: flex;
@@ -27,4 +32,21 @@
   align-items: center;
   background: beige;
   border: solid black 1px;
+}
+.undo-btn {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  margin-left: 20px;
+  /* background: rgba(255, 255, 255, 0.4); */
+  border-radius: 2px;
+}
+.undo-icon {
+  background: rgba(0, 0, 0, 0.1);
+  color: #ffffff;
+  width: 50px;
+  height: 50px;
 }

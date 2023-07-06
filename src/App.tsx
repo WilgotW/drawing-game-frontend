@@ -18,6 +18,8 @@ function App() {
   const [playersTurn, setPlayersTurn] = useState<boolean>(false);
 
   const [revealingWord, setRevealingWord] = useState<string>("");
+
+  const [doUndo, setDoUndo] = useState<boolean>(false);
   // useEffect(() => {
   //   console.log("ehe");
   //   return () => {
@@ -33,13 +35,11 @@ function App() {
   });
 
   socket.on("start_round", (words) => {
-    console.log(words);
     setRandomWords(words);
     setPlayersTurn(true);
   });
 
   socket.on("word_update", (word) => {
-    console.log(word);
     setRevealingWord(word);
   });
 
@@ -55,12 +55,26 @@ function App() {
             alignItems: "center",
           }}
         >
-          {revealingWord && <h1 className="revealing-word">{revealingWord}</h1>}
+          {revealingWord && (
+            <div
+              style={{
+                width: `${revealingWord.length * 25}px`,
+                minWidth: "200px",
+              }}
+              className="revealing-word"
+            >
+              {revealingWord.split("").map((letter, index) => (
+                <h1 key={index}>{letter}</h1>
+              ))}
+            </div>
+          )}
         </div>
         <DrawingSpace
           playersTurn={playersTurn}
           activeColor={activeColor}
           penWidth={penWidth}
+          doUndo={doUndo}
+          setDoUndo={setDoUndo}
         />
         {playersTurn && (
           <PenOptions
@@ -68,6 +82,7 @@ function App() {
             activeColor={activeColor}
             setPenWidth={setPenWidth}
             penWidth={penWidth}
+            setDoUndo={setDoUndo}
           />
         )}
       </div>

@@ -13,12 +13,16 @@ interface IProps {
   playersTurn: boolean;
   activeColor: string;
   penWidth: number;
+  doUndo: boolean;
+  setDoUndo: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function DrawingSpace({
   playersTurn,
   activeColor = "black",
   penWidth = 2,
+  doUndo,
+  setDoUndo,
 }: IProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [canvas, setCanvas] = useState<HTMLCanvasElement>();
@@ -42,6 +46,13 @@ export default function DrawingSpace({
 
   socket.on("point_update", (points) => {
     setAllDrawPoints(points);
+  });
+
+  socket.on("point_removed", (newPoints) => {
+    setAllDrawPoints(newPoints);
+
+    c ? (c.fillStyle = "white") : null;
+    canvas && c?.fillRect(0, 0, canvas.width, canvas.height);
   });
 
   useEffect(() => {
@@ -184,22 +195,27 @@ export default function DrawingSpace({
   }
 
   function undo() {
-    console.log(allDrawPoints);
+    if (allDrawPoints.length < 1) {
+      return;
+    }
     let removeLast: DrawPointsProps[] = [];
-    if (allDrawPoints.length >= 10) {
-      console.log("okj");
+    if (allDrawPoints.length >= 11) {
       removeLast = [...allDrawPoints.slice(0, -10)];
     } else if (allDrawPoints) {
-      console.log("ew");
       removeLast = [...allDrawPoints.slice(0, -1)];
     }
-    removeLast[removeLast.length - 1].endPoint = true;
 
-    socket.emit("add_point", removeLast);
+    if (allDrawPoints.length > 1)
+      removeLast[removeLast.length - 1].endPoint = true;
 
-    c ? (c.fillStyle = "white") : null;
-    canvas && c?.fillRect(0, 0, canvas.width, canvas.height);
+    socket.emit("point_undo", removeLast);
   }
+  useEffect(() => {
+    if (doUndo) {
+      undo();
+      setDoUndo(false);
+    }
+  }, [doUndo]);
 
   useEffect(() => {
     if (playersTurn) {
@@ -238,7 +254,6 @@ export default function DrawingSpace({
           ></div>
         )}
       </div>
-      {/* <button onClick={() => undo()}>undo</button> */}
     </div>
   );
 }

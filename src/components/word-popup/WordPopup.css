@@ -1,0 +1,41 @@
+.select-word-container {
+  z-index: 10;
+  width: 100%;
+  height: 100vh;
+  position: absolute;
+  /* background: rgba(255, 255, 255, 0.1); */
+}
+.word-selection-buttons {
+  height: fit-content;
+  background-color: #8a2be2;
+  background-image: radial-gradient(circle, #962be2 15%, transparent 16%),
+    radial-gradient(circle, #962be2 15%, transparent 16%);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 70px;
+  gap: 20px;
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.word-select-button {
+  cursor: pointer;
+  width: 100px;
+  height: 35px;
+  border-radius: 20px;
+  border: none;
+  transition: 0.2s ease;
+}
+.word-selection-buttons h1 {
+  text-align: center;
+  font-size: 34px;
+  color: white;
+  text-shadow: -2px -2px 0 rgba(54, 54, 54, 0.5),
+    2px -2px 0 rgba(54, 54, 54, 0.5), -2px 2px 0 rgba(54, 54, 54, 0.5),
+    2px 2px 0 rgba(54, 54, 54, 0.5);
+}
+.word-select-button:hover {
+  transform: scale(1.1);
+}

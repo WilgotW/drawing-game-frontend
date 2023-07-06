@@ -2,27 +2,22 @@ import React, { useEffect, useState } from "react";
 import Slider from "@mui/material/Slider";
 import "./PenOptions.css";
 import fetchItems from "../../functions/fetchItems";
+import { IoArrowUndoSharp } from "react-icons/io5";
+
 interface IProps {
   setActiveColor: React.Dispatch<React.SetStateAction<string>>;
   activeColor: string;
   setPenWidth: React.Dispatch<React.SetStateAction<number>>;
   penWidth: number;
+  setDoUndo: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export default function PenOptions({
   setActiveColor,
   activeColor,
   setPenWidth,
   penWidth,
+  setDoUndo,
 }: IProps) {
-  function handlePenWidthChange(
-    ev: React.ChangeEvent<{}>,
-    value: number | number[]
-  ) {
-    if (typeof value === "number") {
-      setPenWidth(value);
-    }
-  }
-
   const [colors, setColors] = useState<string[]>([]);
 
   useEffect(() => {
@@ -39,36 +34,6 @@ export default function PenOptions({
   }, []);
   return (
     <div className="pen-options-main-container">
-      {/* <div
-        style={{
-          width: "400px",
-          height: "200px",
-          justifyContent: "center",
-          display: "flex",
-        }}
-      >
-        <div
-          style={{
-            width: "150px",
-            height: "150px",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <div style={{ width: "100%" }}>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <label>Pen Width</label>
-            </div>
-            <Slider
-              min={5}
-              onChange={handlePenWidthChange}
-              value={penWidth}
-              aria-label="Default"
-              valueLabelDisplay="auto"
-            />
-          </div>
-        </div>
-      </div> */}
       <div
         style={{
           width: "fit-content",
@@ -94,8 +59,18 @@ export default function PenOptions({
             ></div>
           ))}
         </div>
-        <div className="pen-widths">
-          <div className="pen-width-button">
+        <div className="pen-widths-container">
+          <div onClick={() => setPenWidth(2)} className="pen-width-button">
+            <div
+              style={{
+                background: "black",
+                borderRadius: "100px",
+                width: "7px",
+                height: "7px",
+              }}
+            ></div>
+          </div>
+          <div onClick={() => setPenWidth(5)} className="pen-width-button">
             <div
               style={{
                 background: "black",
@@ -105,6 +80,49 @@ export default function PenOptions({
               }}
             ></div>
           </div>
+          <div onClick={() => setPenWidth(10)} className="pen-width-button">
+            <div
+              style={{
+                background: "black",
+                borderRadius: "100px",
+                width: "15px",
+                height: "15px",
+              }}
+            ></div>
+          </div>
+          <div onClick={() => setPenWidth(20)} className="pen-width-button">
+            <div
+              style={{
+                background: "black",
+                borderRadius: "100px",
+                width: "20px",
+                height: "20px",
+              }}
+            ></div>
+          </div>
+          <div onClick={() => setPenWidth(30)} className="pen-width-button">
+            <div
+              style={{
+                background: "black",
+                borderRadius: "100px",
+                width: "30px",
+                height: "30px",
+              }}
+            ></div>
+          </div>
+          <div onClick={() => setPenWidth(50)} className="pen-width-button">
+            <div
+              style={{
+                background: "black",
+                borderRadius: "100px",
+                width: "45px",
+                height: "45px",
+              }}
+            ></div>
+          </div>
+        </div>
+        <div className="undo-btn" onClick={() => setDoUndo(true)}>
+          <IoArrowUndoSharp className="undo-icon" />
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React from "react";
 import { socket } from "../../socket";
-
+import "./WordPopup.css";
 interface IProps {
   randomWords: string[];
 }
@@ -15,14 +15,14 @@ export default function WordPopup({ randomWords }: IProps) {
       <div
         style={{
           width: "100%",
-          height: "100%",
+          height: "70%",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
         }}
       >
         <div className="word-selection-buttons">
-          <h1 style={{ textAlign: "center" }}>SELECT A WORD</h1>
+          <h1>Select A Word to Draw!</h1>
           <div style={{ display: "flex", gap: "20px", margin: "20px" }}>
             <button
               className="word-select-button"
