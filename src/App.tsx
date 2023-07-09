@@ -8,6 +8,7 @@ import WordPopup from "./components/word-popup/WordPopup";
 import RevealingWord from "./components/revealing-word/RevealingWord";
 import PlayersList from "./components/players-list/PlayersList";
 import GuessChat from "./components/guess-chat/GuessChat";
+import CanvasDrawing from "./components/canvas-drawing/CanvasDrawing";
 
 function App() {
   const [activeColor, setActiveColor] = useState<string>("black");
@@ -46,12 +47,17 @@ function App() {
         <div style={{ display: "flex", gap: "10px" }}>
           <PlayersList />
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <DrawingSpace
+            {/* <DrawingSpace
               playersTurn={playersTurn}
               activeColor={activeColor}
               penWidth={penWidth}
               doUndo={doUndo}
               setDoUndo={setDoUndo}
+            /> */}
+            <CanvasDrawing
+              playersTurn={playersTurn}
+              activeColor={activeColor}
+              penWidth={penWidth}
             />
             {playersTurn && (
               <PenOptions

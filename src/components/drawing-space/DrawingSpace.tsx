@@ -1,5 +1,6 @@
 import { socket } from "../../socket";
 import { useEffect, useState, useRef, useCallback } from "react";
+import { debounce } from "lodash";
 
 interface DrawPointsProps {
   x: number;
@@ -35,6 +36,10 @@ export default function DrawingSpace({
   const [releasedMouse, setReleasedMouse] = useState<boolean>(false);
   const [pressedMouse, setPressedMouse] = useState<boolean>(false);
 
+  const [alreadyDrawnPoints, setAlreadyDrawnPoints] = useState<
+    DrawPointsProps[]
+  >([]);
+
   const debouncedDraw = useCallback(debounce(draw, 10), [mousePosition]);
 
   const debouncedSmoothDrawPoints = useCallback(
@@ -60,15 +65,21 @@ export default function DrawingSpace({
     c.fillStyle = "white";
     c.fillRect(0, 0, canvas.width, canvas.height);
     mouseController();
+    // if (playersTurn) {
+    //   requestAnimationFrame(draw);
+    //   requestAnimationFrame(smoothDrawPoints);
+    // }
   }, [c]);
 
   useEffect(() => {
     socket.on("point_update", (points) => {
       setAllDrawPoints((prevPoints) => [...prevPoints, points]);
+      setAlreadyDrawnPoints((prevPoints) => [...prevPoints, points]);
     });
 
     socket.on("point_removed", (newPoints) => {
       setAllDrawPoints(newPoints);
+      setAlreadyDrawnPoints(newPoints);
       c.fillStyle = "white";
       c?.fillRect(0, 0, canvas.width, canvas.height);
     });
@@ -177,7 +188,14 @@ export default function DrawingSpace({
         size: penWidth,
         endPoint: false,
       };
-      socket.emit("add_point", newPoint);
+      if (
+        !alreadyDrawnPoints.some(
+          (point) => point.x === newPoint.x && point.y === newPoint.y
+        )
+      ) {
+        socket.emit("add_point", newPoint);
+        setAlreadyDrawnPoints((prevPoints) => [...prevPoints, newPoint]);
+      }
     }
     if (releasedMouse && pressedMouse) {
       const newPoint = {
@@ -187,10 +205,18 @@ export default function DrawingSpace({
         size: penWidth,
         endPoint: true,
       };
-      socket.emit("add_point", newPoint);
+      if (
+        !alreadyDrawnPoints.some(
+          (point) => point.x === newPoint.x && point.y === newPoint.y
+        )
+      ) {
+        socket.emit("add_point", newPoint);
+        setAlreadyDrawnPoints((prevPoints) => [...prevPoints, newPoint]);
+      }
       setPressedMouse(false);
       setReleasedMouse(false);
     }
+    // requestAnimationFrame(draw);
   }
 
   function smoothDrawPointsAll() {
@@ -244,6 +270,7 @@ export default function DrawingSpace({
         point2.y
       );
       c.stroke();
+    } else {
     }
 
     c.fillStyle = point2.color;
