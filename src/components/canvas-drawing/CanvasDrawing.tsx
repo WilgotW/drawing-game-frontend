@@ -1,15 +1,21 @@
 import React, { useEffect, useRef, useState } from "react";
 import { socket } from "../../socket";
+import PenOptions from "../pen-options/PenOptions";
+import WordPopup from "../word-popup/WordPopup";
 
 interface IProps {
   playersTurn: boolean;
   activeColor: string;
   penWidth: number;
+  revealingWord: string;
+  randomWords: string[];
 }
 export default function CanvasDrawing({
   playersTurn,
   activeColor,
   penWidth,
+  revealingWord,
+  randomWords,
 }: IProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [canvas, setCanvas] = useState<HTMLCanvasElement>();
@@ -53,11 +59,13 @@ export default function CanvasDrawing({
     if (!canvas || !c) return;
     c.fillStyle = "white";
     c.fillRect(0, 0, canvas.width, canvas.height);
+  }, [c]);
 
+  useEffect(() => {
     if (playersTurn) {
       mouseController();
     }
-  }, [c]);
+  }, [playersTurn]);
 
   useEffect(() => {
     if (!playersTurn) return;
@@ -72,7 +80,11 @@ export default function CanvasDrawing({
     }
   }, [isMouseDown]);
 
-  useEffect(() => {}, [dataSendCount]);
+  useEffect(() => {
+    if (!isCanvasHovered) {
+      setIsMouseDown(false);
+    }
+  }, [isCanvasHovered]);
 
   function sendCanvasData() {
     const imgData = canvas?.toDataURL();
@@ -101,6 +113,12 @@ export default function CanvasDrawing({
     if (isMouseDown) {
       animationRef.current = requestAnimationFrame(draw);
     }
+  }
+
+  function clearCanvas() {
+    c!.fillStyle = "white";
+    c!.fillRect(0, 0, canvas!.width, canvas!.height);
+    sendCanvasData();
   }
 
   function mouseController() {
@@ -152,33 +170,39 @@ export default function CanvasDrawing({
   }
 
   return (
-    <div>
-      <div
-        className="draw-window"
-        style={{ position: "relative", width: "100%", height: "100%" }}
-      >
-        <canvas
-          ref={canvasRef}
-          style={{ width: "100%", height: "100%" }}
-        ></canvas>
-        {isCanvasHovered && (
-          <div
-            className="mouse-follower"
-            style={{
-              border: "solid black 1px",
-              position: "absolute",
-              top: mousePosition.y + 4,
-              left: mousePosition.x + 6,
-              width: `${penWidth * 2}px`,
-              height: `${penWidth * 2}px`,
-              borderRadius: "50%",
-              background: activeColor,
-              pointerEvents: "none",
-              transform: "translate(-50%, -50%)",
-            }}
-          ></div>
-        )}
+    <>
+      <div>
+        <div
+          className="draw-window"
+          style={{ position: "relative", width: "100%", height: "100%" }}
+        >
+          {playersTurn && !revealingWord && (
+            <WordPopup randomWords={randomWords} />
+          )}
+          <canvas
+            ref={canvasRef}
+            style={{ width: "100%", height: "100%", userSelect: "none" }}
+          ></canvas>
+          {isCanvasHovered && (
+            <div
+              className="mouse-follower"
+              style={{
+                border: "solid black 1px",
+                position: "absolute",
+                top: mousePosition.y + 4,
+                left: mousePosition.x + 6,
+                width: `${penWidth * 2}px`,
+                height: `${penWidth * 2}px`,
+                borderRadius: "50%",
+                background: activeColor,
+                pointerEvents: "none",
+                transform: "translate(-50%, -50%)",
+              }}
+            ></div>
+          )}
+        </div>
       </div>
-    </div>
+      {playersTurn && <PenOptions clearCanvas={clearCanvas} />}
+    </>
   );
 }

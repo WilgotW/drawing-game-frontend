@@ -41,3 +41,7 @@ canvas:hover {
   width: 100%;
   height: fit-content;
 }
+.drawing-container {
+  width: fit-content;
+  height: fit-content;
+}

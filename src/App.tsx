@@ -9,6 +9,7 @@ import RevealingWord from "./components/revealing-word/RevealingWord";
 import PlayersList from "./components/players-list/PlayersList";
 import GuessChat from "./components/guess-chat/GuessChat";
 import CanvasDrawing from "./components/canvas-drawing/CanvasDrawing";
+import { AppContext } from "./context/AppContext";
 
 function App() {
   const [activeColor, setActiveColor] = useState<string>("black");
@@ -23,7 +24,7 @@ function App() {
 
   const [revealingWord, setRevealingWord] = useState<string>("");
 
-  const [doUndo, setDoUndo] = useState<boolean>(false);
+  // const [doUndo, setDoUndo] = useState<boolean>(false);
 
   socket.on("player_info", (player: any) => {
     console.log(player.playerId);
@@ -41,7 +42,6 @@ function App() {
 
   return (
     <div className="app-main-container">
-      {playersTurn && !revealingWord && <WordPopup randomWords={randomWords} />}
       <div style={{ display: "flex", flexDirection: "column" }}>
         <RevealingWord revealingWord={revealingWord} />
         <div style={{ display: "flex", gap: "10px" }}>
@@ -54,20 +54,23 @@ function App() {
               doUndo={doUndo}
               setDoUndo={setDoUndo}
             /> */}
-            <CanvasDrawing
-              playersTurn={playersTurn}
-              activeColor={activeColor}
-              penWidth={penWidth}
-            />
-            {playersTurn && (
-              <PenOptions
-                setActiveColor={setActiveColor}
+
+            <AppContext.Provider
+              value={{
+                setActiveColor,
+                activeColor,
+                setPenWidth,
+                penWidth,
+              }}
+            >
+              <CanvasDrawing
+                playersTurn={playersTurn}
                 activeColor={activeColor}
-                setPenWidth={setPenWidth}
                 penWidth={penWidth}
-                setDoUndo={setDoUndo}
+                revealingWord={revealingWord}
+                randomWords={randomWords}
               />
-            )}
+            </AppContext.Provider>
           </div>
           <GuessChat />
         </div>

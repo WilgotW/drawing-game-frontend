@@ -1,24 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Slider from "@mui/material/Slider";
 import "./PenOptions.css";
 import fetchItems from "../../functions/fetchItems";
-import { IoArrowUndoSharp } from "react-icons/io5";
+import { IoMdTrash } from "react-icons/io";
+import { AppContext } from "../../context/AppContext";
 
 interface IProps {
-  setActiveColor: React.Dispatch<React.SetStateAction<string>>;
-  activeColor: string;
-  setPenWidth: React.Dispatch<React.SetStateAction<number>>;
-  penWidth: number;
-  setDoUndo: React.Dispatch<React.SetStateAction<boolean>>;
+  clearCanvas: () => void;
 }
-export default function PenOptions({
-  setActiveColor,
-  activeColor,
-  setPenWidth,
-  penWidth,
-  setDoUndo,
-}: IProps) {
+
+export default function PenOptions({ clearCanvas }: IProps) {
   const [colors, setColors] = useState<string[]>([]);
+  const { setActiveColor, activeColor, setPenWidth } = useContext(AppContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -121,8 +114,11 @@ export default function PenOptions({
             ></div>
           </div>
         </div>
-        <div className="undo-btn" onClick={() => setDoUndo(true)}>
+        {/* <div className="undo-btn" onClick={() => setDoUndo(true)}>
           <IoArrowUndoSharp className="undo-icon" />
+        </div> */}
+        <div className="tool-btn" onClick={() => clearCanvas()}>
+          <IoMdTrash className="tool-icon" />
         </div>
       </div>
     </div>
