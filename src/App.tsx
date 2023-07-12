@@ -10,6 +10,7 @@ import PlayersList from "./components/players-list/PlayersList";
 import GuessChat from "./components/guess-chat/GuessChat";
 import CanvasDrawing from "./components/canvas-drawing/CanvasDrawing";
 import { AppContext } from "./context/AppContext";
+import Menu from "./components/menu/Menu";
 
 function App() {
   const [activeColor, setActiveColor] = useState<string>("black");
@@ -23,6 +24,8 @@ function App() {
   const [playersTurn, setPlayersTurn] = useState<boolean>(false);
 
   const [revealingWord, setRevealingWord] = useState<string>("");
+
+  const [userName, setUserName] = useState<string>("");
 
   // const [doUndo, setDoUndo] = useState<boolean>(false);
 
@@ -42,27 +45,24 @@ function App() {
 
   return (
     <div className="app-main-container">
-      <div style={{ display: "flex", flexDirection: "column" }}>
+      <AppContext.Provider
+        value={{
+          setUserName,
+          userName,
+          setActiveColor,
+          activeColor,
+          setPenWidth,
+          penWidth,
+        }}
+      >
+        <Menu />
+
+        {/* <div style={{ display: "flex", flexDirection: "column" }}>
         <RevealingWord revealingWord={revealingWord} />
         <div style={{ display: "flex", gap: "10px" }}>
           <PlayersList />
           <div style={{ display: "flex", flexDirection: "column" }}>
-            {/* <DrawingSpace
-              playersTurn={playersTurn}
-              activeColor={activeColor}
-              penWidth={penWidth}
-              doUndo={doUndo}
-              setDoUndo={setDoUndo}
-            /> */}
 
-            <AppContext.Provider
-              value={{
-                setActiveColor,
-                activeColor,
-                setPenWidth,
-                penWidth,
-              }}
-            >
               <CanvasDrawing
                 playersTurn={playersTurn}
                 activeColor={activeColor}
@@ -70,11 +70,11 @@ function App() {
                 revealingWord={revealingWord}
                 randomWords={randomWords}
               />
-            </AppContext.Provider>
           </div>
           <GuessChat playersTurn={playersTurn} />
         </div>
-      </div>
+      </div> */}
+      </AppContext.Provider>
     </div>
   );
 }
