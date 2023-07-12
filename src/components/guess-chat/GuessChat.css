@@ -7,32 +7,41 @@
   border-radius: 4px;
 }
 .guess-chat-main-container h2 {
-  position: absolute;
+  width: 100%;
+  text-align: center;
 }
 .chat-box {
   position: relative;
   display: flex;
-  flex-direction: column;
+  align-items: flex-end;
   height: 100%;
   width: 100%;
 }
-.chat-box input {
-  position: absolute;
-  bottom: 3px;
-  left: 3px;
+
+.chat-feed {
+  width: 100%;
+}
+.chat-message {
+  padding: 5px;
+}
+.input-bar {
+  border-top: solid black 1px;
+  margin-top: 10px;
+  padding: 5px;
+  display: flex;
+  gap: 5px;
+}
+.input-bar input {
   width: calc(100% - 65px);
   height: 30px;
   border: solid black 1px;
   border-radius: 2px;
 }
-.chat-box button {
+.input-bar button {
   color: white;
-  position: absolute;
-  right: 3px;
-  bottom: 3px;
-  background: rgb(97, 97, 238);
   border: none;
   border-radius: 3px;
   width: 53px;
   height: 33px;
+  cursor: pointer;
 }

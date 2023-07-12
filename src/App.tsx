@@ -72,7 +72,7 @@ function App() {
               />
             </AppContext.Provider>
           </div>
-          <GuessChat />
+          <GuessChat playersTurn={playersTurn} />
         </div>
       </div>
     </div>
