@@ -13,14 +13,19 @@ export default function Menu() {
   socket.on("lobby_msg", (msg) => console.log(msg));
 
   function createLobby() {
-    const data = {
-      userName: userName,
-      lobbyName: lobbyInput,
-    };
-    socket.emit("create_lobby", data);
+    // const data = {
+    //   userName: userName,
+    //   lobbyName: lobbyInput,
+    // };
+    socket.emit("create_lobby", userName);
   }
   function joinLobby() {
-    socket.emit("join_lobby", lobbyInput);
+    console.log("lobby input: " + lobbyInput);
+    socket.emit("join_lobby", { lobbyId: lobbyInput, userName: userName });
+  }
+
+  function sendToLobby() {
+    socket.emit("send_to_lobby", userName);
   }
   return (
     <div>
@@ -47,6 +52,7 @@ export default function Menu() {
         />
         <button onClick={() => createLobby()}>create lobby</button>
         <button onClick={() => joinLobby()}>join lobby</button>
+        <button onClick={() => sendToLobby()}>sc</button>
       </div>
     </div>
   );
