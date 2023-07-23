@@ -11,10 +11,19 @@ import GuessChat from "./components/guess-chat/GuessChat";
 import CanvasDrawing from "./components/canvas-drawing/CanvasDrawing";
 import { AppContext } from "./context/AppContext";
 import Menu from "./components/menu/Menu";
+import LobbyRoom from "./components/lobby-room/LobbyRoom";
+
+interface PlayerProps {
+  playerName: string;
+  playerId: string;
+  playersTurn: boolean;
+  joinedLobbyId: string;
+}
 
 function App() {
   const [activeColor, setActiveColor] = useState<string>("black");
   const [penWidth, setPenWidth] = useState<number>(5);
+  const [playersInLobby, setPlayersInLobby] = useState<PlayerProps[]>([]);
 
   const [activeWord, setActiveWord] = useState<string>("");
   // const [allWords, setAllWords] = useState<string[]>([]);
@@ -27,7 +36,13 @@ function App() {
 
   const [userName, setUserName] = useState<string>("");
 
+  const [lobbyId, setLobbyId] = useState<string>("");
+
   // const [doUndo, setDoUndo] = useState<boolean>(false);
+
+  socket.on("set_lobby_id", (lobbyId) => {
+    setLobbyId(lobbyId);
+  });
 
   socket.on("player_info", (player: any) => {
     console.log(player.playerId);
@@ -53,9 +68,13 @@ function App() {
           activeColor,
           setPenWidth,
           penWidth,
+          setPlayersInLobby,
+          playersInLobby,
+          setLobbyId,
+          lobbyId,
         }}
       >
-        <Menu />
+        {playersInLobby.length > 0 ? <LobbyRoom /> : <Menu />}
 
         {/* <div style={{ display: "flex", flexDirection: "column" }}>
         <RevealingWord revealingWord={revealingWord} />

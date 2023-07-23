@@ -1,38 +1,28 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { AppContext } from "../../context/AppContext";
 import { socket } from "../../socket";
 
-interface PlayerProps {
-  playerName: string;
-  playerId: string;
-  playersTurn: boolean;
-  joinedLobbyId: string;
-}
-
-interface LobbyProps {
-  players: PlayerProps[];
-  lobbyId: string;
-}
-
 export default function Menu() {
   const [lobbyInput, setLobbyInput] = useState<string>("");
-  const { setUserName, userName } = useContext(AppContext);
+  const { setUserName, userName, setPlayersInLobby, playersInLobby } =
+    useContext(AppContext);
 
-  const [lobbyData, setLobbyData] = useState<LobbyProps>({
-    players: [],
-    lobbyId: "",
-  });
+  const [lobbyId, setLobbyId] = useState<string>("");
 
   socket.on("lobby_msg", (msg) => console.log(msg));
 
-  socket.on("lobby_update", (updatedLobby: LobbyProps) => {
-    console.log(updatedLobby.players);
-
-    // setLobbyData({
-    //   players: updatedLobby.players,
-    //   lobbyId: updatedLobby.lobbyId,
-    // });
+  socket.on("player_update", (playersList) => {
+    console.log(playersList);
+    const newPlayersInLobby = playersList.map((player) => ({
+      playerName: player.playerName,
+      playerId: player.playerId,
+      playersTurn: player.playersTurn,
+      joinedLobbyId: player.joinedLobbyId,
+    }));
+    setPlayersInLobby(newPlayersInLobby);
   });
+
+  socket.on();
 
   function createLobby() {
     socket.emit("create_lobby", userName);
@@ -48,9 +38,9 @@ export default function Menu() {
   return (
     <div>
       <h1 style={{ color: "white", textAlign: "center" }}>Menu</h1>
-      {lobbyData && (
+      {playersInLobby && (
         <>
-          {lobbyData?.players?.map((player) => (
+          {playersInLobby?.map((player) => (
             <h3>{player.playerName}</h3>
           ))}
         </>

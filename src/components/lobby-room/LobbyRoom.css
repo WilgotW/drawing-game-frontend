@@ -1,0 +1,118 @@
+.lobby-room-main-container {
+  padding: 50px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.lobby-room-main-container h1 {
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 40px;
+  letter-spacing: 3px;
+  color: white;
+  text-shadow: -2px -2px 0 rgba(54, 54, 54, 0.5),
+    2px -2px 0 rgba(54, 54, 54, 0.5), -2px 2px 0 rgba(54, 54, 54, 0.5),
+    2px 2px 0 rgba(54, 54, 54, 0.5);
+}
+.lobby-room-player-list {
+  position: relative;
+  width: 600px;
+  padding: 30px;
+  height: 700px;
+  background: white;
+  border-radius: 20px;
+}
+.player-grid {
+  width: fit-content;
+  height: fit-content;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+}
+.lobby-player-card {
+  position: relative;
+  width: 170px;
+  height: 220px;
+
+  border-radius: 10px;
+
+  background-color: #7b22c3;
+  background-image: radial-gradient(circle, #8525d4 15%, transparent 16%),
+    radial-gradient(circle, #8525d4 15%, transparent 16%);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+}
+.lobby-player-card h3 {
+  color: white;
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  text-align: center;
+  width: 100%;
+}
+
+.invite-code-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+}
+.lobby-code {
+  display: flex;
+  position: relative;
+
+  width: fit-content;
+  height: 30px;
+
+  padding-left: 10px;
+  padding-right: 60px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  border-radius: 10px;
+  background: beige;
+  align-items: center;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+.lobby-code div {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  right: 0;
+  background: rgb(113, 113, 253);
+}
+.play-button {
+  width: 150px;
+  height: 40px;
+
+  border-radius: 5px;
+
+  font-size: 18px;
+  letter-spacing: 2px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  background: rgb(156, 88, 219);
+  background: linear-gradient(
+    144deg,
+    rgba(156, 88, 219, 1) 0%,
+    rgba(219, 43, 226, 1) 100%
+  );
+  border: none;
+  font-weight: bolder;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+.play-button:hover {
+  letter-spacing: 8px;
+  background: transparent;
+  border: solid 1px black;
+  transform: scale(1.1);
+}
