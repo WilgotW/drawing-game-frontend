@@ -38,16 +38,63 @@ function App() {
 
   const [lobbyId, setLobbyId] = useState<string>("");
 
+  const [startGame, setStartGame] = useState<boolean>(false);
+  const [showGame, setShowGame] = useState<boolean>(false);
+
   // const [doUndo, setDoUndo] = useState<boolean>(false);
+
+  const [thisPlayersId, setThisPlayersId] = useState<string>();
+
+  socket.on("get_player_id", (playerId: string) => {
+    console.log("sent: " + playerId);
+    setThisPlayersId(playerId);
+  });
+
+  useEffect(() => {
+    console.log(thisPlayersId);
+  }, [thisPlayersId]);
 
   socket.on("set_lobby_id", (lobbyId) => {
     setLobbyId(lobbyId);
   });
 
-  socket.on("player_info", (player: any) => {
-    console.log(player.playerId);
-    setPlayerId(player.playerId);
+  socket.on("player_update", (playersList) => {
+    console.log(playersList);
+    const newPlayersInLobby = playersList.map((player) => ({
+      playerName: player.playerName,
+      playerId: player.playerId,
+      playersTurn: player.playersTurn,
+      joinedLobbyId: player.joinedLobbyId,
+    }));
+    setPlayersInLobby(newPlayersInLobby);
   });
+
+  useEffect(() => {
+    if (!playersInLobby) return;
+    checkTurn();
+  }, [playersInLobby]);
+  function checkTurn() {
+    playersInLobby.forEach((player) => {
+      if (player.playerId === thisPlayersId) {
+        if (player.playersTurn === true) {
+          setPlayersTurn(true);
+        } else {
+          setPlayersTurn(false);
+        }
+      }
+    });
+  }
+
+  useEffect(() => {
+    if (playersTurn) {
+      socket.emit("get_random_words", thisPlayersId);
+    }
+  }, [playersTurn]);
+
+  // socket.on("player_info", (player: any) => {
+  //   console.log(player.playerId);
+  //   setPlayerId(player.playerId);
+  // });
 
   socket.on("start_round", (words: string[]) => {
     setRandomWords(words);
@@ -57,6 +104,20 @@ function App() {
   socket.on("word_update", (word: string) => {
     setRevealingWord(word);
   });
+
+  socket.on("starting_the_game", () => {
+    setShowGame(true);
+  });
+
+  useEffect(() => {
+    console.log(startGame);
+    if (!startGame) return;
+
+    socket.emit("start_game", {
+      playersInLobby: playersInLobby,
+      lobbyId: lobbyId,
+    });
+  }, [startGame]);
 
   return (
     <div className="app-main-container">
@@ -74,25 +135,32 @@ function App() {
           lobbyId,
         }}
       >
-        {playersInLobby.length > 0 ? <LobbyRoom /> : <Menu />}
-
-        {/* <div style={{ display: "flex", flexDirection: "column" }}>
-        <RevealingWord revealingWord={revealingWord} />
-        <div style={{ display: "flex", gap: "10px" }}>
-          <PlayersList />
+        {showGame ? (
           <div style={{ display: "flex", flexDirection: "column" }}>
-
-              <CanvasDrawing
-                playersTurn={playersTurn}
-                activeColor={activeColor}
-                penWidth={penWidth}
-                revealingWord={revealingWord}
-                randomWords={randomWords}
-              />
+            <RevealingWord revealingWord={revealingWord} />
+            <div style={{ display: "flex", gap: "10px" }}>
+              <PlayersList />
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <CanvasDrawing
+                  playersTurn={playersTurn}
+                  activeColor={activeColor}
+                  penWidth={penWidth}
+                  revealingWord={revealingWord}
+                  randomWords={randomWords}
+                />
+              </div>
+              <GuessChat playersTurn={playersTurn} />
+            </div>
           </div>
-          <GuessChat playersTurn={playersTurn} />
-        </div>
-      </div> */}
+        ) : (
+          <>
+            {playersInLobby.length > 0 ? (
+              <LobbyRoom setStartGame={setStartGame} />
+            ) : (
+              <Menu />
+            )}
+          </>
+        )}
       </AppContext.Provider>
     </div>
   );

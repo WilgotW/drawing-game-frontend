@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./GuessChat.css";
 import { socket } from "../../socket";
+import { AppContext } from "../../context/AppContext";
 
 interface IProps {
   playersTurn: boolean;
@@ -13,6 +14,7 @@ interface chatMessageProps {
 }
 
 export default function GuessChat({ playersTurn }: IProps) {
+  const { lobbyId } = useContext(AppContext);
   const [guess, setGuess] = useState<string>("");
   const [chatMessages, setChatMessages] = useState<chatMessageProps[]>([]);
   const [canGuess, setCanGuess] = useState<boolean>(true);
@@ -33,7 +35,10 @@ export default function GuessChat({ playersTurn }: IProps) {
 
   function sendGuess() {
     if (guess.length <= 0) return;
-    socket.emit("send_guess", guess);
+    socket.emit("send_guess", {
+      guess: guess,
+      lobbyId: lobbyId,
+    });
     setGuess("");
   }
 

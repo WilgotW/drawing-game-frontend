@@ -2,8 +2,18 @@ import React, { useContext } from "react";
 import { AppContext } from "../../context/AppContext";
 import "./LobbyRoom.css";
 import { BiCopyAlt } from "react-icons/bi";
-export default function LobbyRoom() {
+
+interface IProps {
+  setStartGame: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default function LobbyRoom({ setStartGame }: IProps) {
   const { playersInLobby, lobbyId } = useContext(AppContext);
+
+  function start() {
+    setStartGame(true);
+    console.log("ssseeet");
+  }
 
   function copyLobbyId() {
     navigator.clipboard.writeText(lobbyId);
@@ -47,7 +57,9 @@ export default function LobbyRoom() {
             alignItems: "center",
           }}
         >
-          <button className="play-button">PLAY</button>
+          <button className="play-button" onClick={start}>
+            PLAY
+          </button>
         </div>
       </div>
     </div>

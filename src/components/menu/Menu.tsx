@@ -11,17 +11,6 @@ export default function Menu() {
 
   socket.on("lobby_msg", (msg) => console.log(msg));
 
-  socket.on("player_update", (playersList) => {
-    console.log(playersList);
-    const newPlayersInLobby = playersList.map((player) => ({
-      playerName: player.playerName,
-      playerId: player.playerId,
-      playersTurn: player.playersTurn,
-      joinedLobbyId: player.joinedLobbyId,
-    }));
-    setPlayersInLobby(newPlayersInLobby);
-  });
-
   socket.on();
 
   function createLobby() {

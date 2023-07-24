@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { socket } from "../../socket";
 import PenOptions from "../pen-options/PenOptions";
 import WordPopup from "../word-popup/WordPopup";
+import { AppContext } from "../../context/AppContext";
 
 interface IProps {
   playersTurn: boolean;
@@ -17,6 +18,8 @@ export default function CanvasDrawing({
   revealingWord,
   randomWords,
 }: IProps) {
+  const { lobbyId } = useContext(AppContext);
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [canvas, setCanvas] = useState<HTMLCanvasElement>();
   const [c, setC] = useState<CanvasRenderingContext2D>();
@@ -30,9 +33,9 @@ export default function CanvasDrawing({
 
   const startPos = useRef({ x: 0, y: 0 });
 
-  //determines how fast client send canvas data. Higher number can lower lag but decreases drawing accuracy for clients.
-  const canvasDataSpeed = 3;
-  const [dataSendCount, setDataSendCount] = useState<number>();
+  // //determines how fast client send canvas data. Higher number can lower lag but decreases drawing accuracy for clients.
+  // const canvasDataSpeed = 3;
+  // const [dataSendCount, setDataSendCount] = useState<number>();
 
   socket.on("canvas_data", (imgData) => {
     const img = new Image();
@@ -88,7 +91,10 @@ export default function CanvasDrawing({
 
   function sendCanvasData() {
     const imgData = canvas?.toDataURL();
-    socket.emit("canvas_data", imgData);
+    socket.emit("canvas_data", {
+      imgData: imgData,
+      lobbyId: lobbyId,
+    });
   }
 
   function draw() {

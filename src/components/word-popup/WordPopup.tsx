@@ -1,13 +1,19 @@
-import React from "react";
+import React, { useContext } from "react";
 import { socket } from "../../socket";
 import "./WordPopup.css";
+import { AppContext } from "../../context/AppContext";
 interface IProps {
   randomWords: string[];
 }
 
 export default function WordPopup({ randomWords }: IProps) {
+  const { lobbyId } = useContext(AppContext);
+
   function selectWord(word: string) {
-    socket.emit("set_word", word);
+    socket.emit("set_word", {
+      word: word,
+      lobbyId: lobbyId,
+    });
   }
 
   return (
