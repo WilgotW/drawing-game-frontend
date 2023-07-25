@@ -21,44 +21,40 @@ interface PlayerProps {
 }
 
 function App() {
+  //canvas
   const [activeColor, setActiveColor] = useState<string>("black");
   const [penWidth, setPenWidth] = useState<number>(5);
+  //lobby
   const [playersInLobby, setPlayersInLobby] = useState<PlayerProps[]>([]);
-
-  const [activeWord, setActiveWord] = useState<string>("");
-  // const [allWords, setAllWords] = useState<string[]>([]);
-  const [randomWords, setRandomWords] = useState<string[]>([]);
-
-  const [playerId, setPlayerId] = useState<string>("");
-  const [playersTurn, setPlayersTurn] = useState<boolean>(false);
-
-  const [revealingWord, setRevealingWord] = useState<string>("");
-
-  const [userName, setUserName] = useState<string>("");
-
   const [lobbyId, setLobbyId] = useState<string>("");
-
+  //words
+  const [randomWords, setRandomWords] = useState<string[]>([]);
+  const [revealingWord, setRevealingWord] = useState<string>("");
+  //player
+  const [userName, setUserName] = useState<string>("");
+  const [thisPlayersId, setThisPlayersId] = useState<string>();
+  const [playersTurn, setPlayersTurn] = useState<boolean>(false);
+  //main
   const [startGame, setStartGame] = useState<boolean>(false);
   const [showGame, setShowGame] = useState<boolean>(false);
 
-  // const [doUndo, setDoUndo] = useState<boolean>(false);
-
-  const [thisPlayersId, setThisPlayersId] = useState<string>();
-
-  socket.on("get_player_id", (playerId: string) => {
-    console.log("sent: " + playerId);
-    setThisPlayersId(playerId);
-  });
-
   useEffect(() => {
-    console.log(thisPlayersId);
-  }, [thisPlayersId]);
+    if (!startGame) return;
+    socket.emit("start_game", {
+      playersInLobby: playersInLobby,
+      lobbyId: lobbyId,
+    });
+  }, [startGame]);
 
-  socket.on("set_lobby_id", (lobbyId) => {
-    setLobbyId(lobbyId);
+  socket.on("get_player_id", (playerId: string) => setThisPlayersId(playerId));
+  socket.on("set_lobby_id", (lobbyId: string) => setLobbyId(lobbyId));
+  socket.on("word_update", (word: string) => setRevealingWord(word));
+  socket.on("starting_the_game", () => setShowGame(true));
+  socket.on("start_round", (words: string[]) => {
+    setRandomWords(words);
+    setPlayersTurn(true);
   });
-
-  socket.on("player_update", (playersList) => {
+  socket.on("player_update", (playersList: any) => {
     console.log(playersList);
     const newPlayersInLobby = playersList.map((player) => ({
       playerName: player.playerName,
@@ -68,56 +64,6 @@ function App() {
     }));
     setPlayersInLobby(newPlayersInLobby);
   });
-
-  useEffect(() => {
-    if (!playersInLobby) return;
-    checkTurn();
-  }, [playersInLobby]);
-  function checkTurn() {
-    playersInLobby.forEach((player) => {
-      if (player.playerId === thisPlayersId) {
-        if (player.playersTurn === true) {
-          setPlayersTurn(true);
-        } else {
-          setPlayersTurn(false);
-        }
-      }
-    });
-  }
-
-  useEffect(() => {
-    if (playersTurn) {
-      socket.emit("get_random_words", thisPlayersId);
-    }
-  }, [playersTurn]);
-
-  // socket.on("player_info", (player: any) => {
-  //   console.log(player.playerId);
-  //   setPlayerId(player.playerId);
-  // });
-
-  socket.on("start_round", (words: string[]) => {
-    setRandomWords(words);
-    setPlayersTurn(true);
-  });
-
-  socket.on("word_update", (word: string) => {
-    setRevealingWord(word);
-  });
-
-  socket.on("starting_the_game", () => {
-    setShowGame(true);
-  });
-
-  useEffect(() => {
-    console.log(startGame);
-    if (!startGame) return;
-
-    socket.emit("start_game", {
-      playersInLobby: playersInLobby,
-      lobbyId: lobbyId,
-    });
-  }, [startGame]);
 
   return (
     <div className="app-main-container">

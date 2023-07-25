@@ -187,7 +187,7 @@ export default function CanvasDrawing({
           )}
           <canvas
             ref={canvasRef}
-            style={{ width: "100%", height: "100%", userSelect: "none" }}
+            style={{ width: "100%", height: "100%" }}
           ></canvas>
           {isCanvasHovered && (
             <div
