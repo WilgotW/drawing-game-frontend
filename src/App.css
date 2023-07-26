@@ -12,6 +12,17 @@ canvas {
 canvas:hover {
   cursor: none;
 }
+*::-webkit-scrollbar {
+  width: 12px;
+}
+*::-webkit-scrollbar-track {
+  background: rgb(211, 211, 211);
+}
+*::-webkit-scrollbar-thumb {
+  background-color: rgb(144, 144, 144);
+  border-radius: 20px;
+}
+
 .app-main-container {
   background-color: #8a2be2;
   background-image: radial-gradient(circle, #962be2 15%, transparent 16%),

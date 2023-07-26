@@ -5,6 +5,7 @@ interface PlayerProps {
   playerId: string;
   playersTurn: boolean;
   joinedLobbyId: string;
+  score: number;
 }
 
 interface AppContextType {
@@ -18,6 +19,7 @@ interface AppContextType {
   playersInLobby: PlayerProps[];
   setLobbyId: React.Dispatch<React.SetStateAction<string>>;
   lobbyId: string;
+  thisPlayersId: string;
 }
 
 export const AppContext = createContext<AppContextType>({
@@ -31,4 +33,5 @@ export const AppContext = createContext<AppContextType>({
   playersInLobby: [],
   setLobbyId: () => {},
   lobbyId: "",
+  thisPlayersId: "",
 });

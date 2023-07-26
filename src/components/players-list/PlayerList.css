@@ -2,4 +2,25 @@
   width: 300px;
   height: 700px;
   background: white;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 5px;
+}
+.player-card {
+  width: 100%;
+  height: 100px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: 5px;
+  border: solid 1px black;
+}
+.players-turn {
+  color: white;
+  background-color: #8a2be2;
+  background-image: radial-gradient(circle, #962be2 15%, transparent 16%),
+    radial-gradient(circle, #962be2 15%, transparent 16%);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
 }

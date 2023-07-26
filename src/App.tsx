@@ -18,6 +18,7 @@ interface PlayerProps {
   playerId: string;
   playersTurn: boolean;
   joinedLobbyId: string;
+  score: number;
 }
 
 function App() {
@@ -32,7 +33,7 @@ function App() {
   const [revealingWord, setRevealingWord] = useState<string>("");
   //player
   const [userName, setUserName] = useState<string>("");
-  const [thisPlayersId, setThisPlayersId] = useState<string>();
+  const [thisPlayersId, setThisPlayersId] = useState<string>("");
   const [playersTurn, setPlayersTurn] = useState<boolean>(false);
   //main
   const [startGame, setStartGame] = useState<boolean>(false);
@@ -61,6 +62,7 @@ function App() {
       playerId: player.playerId,
       playersTurn: player.playersTurn,
       joinedLobbyId: player.joinedLobbyId,
+      score: player.score,
     }));
     setPlayersInLobby(newPlayersInLobby);
   });
@@ -79,6 +81,7 @@ function App() {
           playersInLobby,
           setLobbyId,
           lobbyId,
+          thisPlayersId,
         }}
       >
         {showGame ? (
