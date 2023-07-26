@@ -8,7 +8,11 @@ export default function PlayersList() {
       {playersInLobby.map((player) => (
         <div
           className={
-            player.playersTurn ? "player-card players-turn" : "player-card"
+            player.playersTurn
+              ? "player-card players-turn"
+              : player.correctGuess
+              ? "player-card correct"
+              : "player-card"
           }
         >
           <div className="player-profile"></div>

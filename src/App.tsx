@@ -19,6 +19,7 @@ interface PlayerProps {
   playersTurn: boolean;
   joinedLobbyId: string;
   score: number;
+  correctGuess: boolean;
 }
 
 function App() {
@@ -56,13 +57,13 @@ function App() {
     setPlayersTurn(true);
   });
   socket.on("player_update", (playersList: any) => {
-    console.log(playersList);
     const newPlayersInLobby = playersList.map((player) => ({
       playerName: player.playerName,
       playerId: player.playerId,
       playersTurn: player.playersTurn,
       joinedLobbyId: player.joinedLobbyId,
       score: player.score,
+      correctGuess: player.correctGuess,
     }));
     setPlayersInLobby(newPlayersInLobby);
   });

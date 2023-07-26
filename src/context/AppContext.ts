@@ -6,6 +6,7 @@ interface PlayerProps {
   playersTurn: boolean;
   joinedLobbyId: string;
   score: number;
+  correctGuess: boolean;
 }
 
 interface AppContextType {
