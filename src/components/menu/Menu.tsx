@@ -11,8 +11,6 @@ export default function Menu() {
 
   socket.on("lobby_msg", (msg) => console.log(msg));
 
-  socket.on();
-
   function createLobby() {
     socket.emit("create_lobby", userName);
   }
