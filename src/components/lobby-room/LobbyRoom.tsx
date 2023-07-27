@@ -2,17 +2,13 @@ import React, { useContext } from "react";
 import { AppContext } from "../../context/AppContext";
 import "./LobbyRoom.css";
 import { BiCopyAlt } from "react-icons/bi";
+import { socket } from "../../socket";
 
-interface IProps {
-  setStartGame: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-export default function LobbyRoom({ setStartGame }: IProps) {
+export default function LobbyRoom() {
   const { playersInLobby, lobbyId } = useContext(AppContext);
 
-  function start() {
-    setStartGame(true);
-    console.log("ssseeet");
+  function startGame() {
+    socket.emit("start_game", lobbyId);
   }
 
   function copyLobbyId() {
@@ -57,7 +53,7 @@ export default function LobbyRoom({ setStartGame }: IProps) {
             alignItems: "center",
           }}
         >
-          <button className="play-button" onClick={start}>
+          <button className="play-button" onClick={startGame}>
             PLAY
           </button>
         </div>

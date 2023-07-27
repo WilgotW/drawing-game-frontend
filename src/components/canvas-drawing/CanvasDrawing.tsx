@@ -37,6 +37,10 @@ export default function CanvasDrawing({
   // const canvasDataSpeed = 3;
   // const [dataSendCount, setDataSendCount] = useState<number>();
 
+  socket.on("end_round", () => {
+    clearCanvas();
+  });
+
   socket.on("canvas_data", (imgData) => {
     const img = new Image();
     img.onload = () => {

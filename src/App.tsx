@@ -37,16 +37,7 @@ function App() {
   const [thisPlayersId, setThisPlayersId] = useState<string>("");
   const [playersTurn, setPlayersTurn] = useState<boolean>(false);
   //main
-  const [startGame, setStartGame] = useState<boolean>(false);
   const [showGame, setShowGame] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (!startGame) return;
-    socket.emit("start_game", {
-      playersInLobby: playersInLobby,
-      lobbyId: lobbyId,
-    });
-  }, [startGame]);
 
   socket.on("get_player_id", (playerId: string) => setThisPlayersId(playerId));
   socket.on("set_lobby_id", (lobbyId: string) => setLobbyId(lobbyId));
@@ -66,6 +57,12 @@ function App() {
       correctGuess: player.correctGuess,
     }));
     setPlayersInLobby(newPlayersInLobby);
+  });
+
+  socket.on("end_round", () => {
+    setRevealingWord("");
+    setRandomWords([]);
+    setPlayersTurn(false);
   });
 
   useEffect(() => {
@@ -116,13 +113,7 @@ function App() {
             </div>
           </div>
         ) : (
-          <>
-            {playersInLobby.length > 0 ? (
-              <LobbyRoom setStartGame={setStartGame} />
-            ) : (
-              <Menu />
-            )}
-          </>
+          <>{playersInLobby.length > 0 ? <LobbyRoom /> : <Menu />}</>
         )}
       </AppContext.Provider>
     </div>
