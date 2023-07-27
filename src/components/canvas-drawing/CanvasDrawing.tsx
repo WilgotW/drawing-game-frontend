@@ -41,13 +41,36 @@ export default function CanvasDrawing({
     clearCanvas();
   });
 
+  const canvasDataQueue = []; // Queue to store canvas data for non-drawing players
+  let isProcessingCanvasData = false; // Flag to check if canvas data is being processed
+
   socket.on("canvas_data", (imgData) => {
+    if (!isProcessingCanvasData) {
+      // If not currently processing canvas data, process the data immediately
+      isProcessingCanvasData = true;
+      processCanvasData(imgData);
+    } else {
+      // If already processing canvas data, add it to the queue
+      canvasDataQueue.push(imgData);
+    }
+  });
+
+  function processCanvasData(imgData) {
     const img = new Image();
     img.onload = () => {
       c?.drawImage(img, 0, 0, canvas!.width, canvas!.height);
+
+      if (canvasDataQueue.length > 0) {
+        // If there are pending canvas data, process the next one in the queue
+        const nextImgData = canvasDataQueue.shift();
+        processCanvasData(nextImgData);
+      } else {
+        // If no more pending canvas data, set the flag to indicate processing is done
+        isProcessingCanvasData = false;
+      }
     };
     img.src = imgData;
-  });
+  }
 
   useEffect(() => {
     if (canvas) {
