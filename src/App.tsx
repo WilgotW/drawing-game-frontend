@@ -68,6 +68,19 @@ function App() {
     setPlayersInLobby(newPlayersInLobby);
   });
 
+  useEffect(() => {
+    if (!playersInLobby) return;
+    playersInLobby.forEach((player) => {
+      if (player.playerId === thisPlayersId) {
+        if (player.playersTurn) {
+          setPlayersTurn(true);
+        } else {
+          setPlayersTurn(false);
+        }
+      }
+    });
+  }, [playersInLobby]);
+
   return (
     <div className="app-main-container">
       <AppContext.Provider
