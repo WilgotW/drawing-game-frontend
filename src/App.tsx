@@ -29,6 +29,7 @@ function App() {
   //lobby
   const [playersInLobby, setPlayersInLobby] = useState<PlayerProps[]>([]);
   const [lobbyId, setLobbyId] = useState<string>("");
+  const [playerChoosingWord, setPlayerChoosingWord] = useState<boolean>(false);
   //words
   const [randomWords, setRandomWords] = useState<string[]>([]);
   const [revealingWord, setRevealingWord] = useState<string>("");
@@ -41,8 +42,14 @@ function App() {
 
   socket.on("get_player_id", (playerId: string) => setThisPlayersId(playerId));
   socket.on("set_lobby_id", (lobbyId: string) => setLobbyId(lobbyId));
-  socket.on("word_update", (word: string) => setRevealingWord(word));
-  socket.on("starting_the_game", () => setShowGame(true));
+  socket.on("word_update", (word: string) => {
+    setRevealingWord(word);
+    setPlayerChoosingWord(false);
+  });
+  socket.on("starting_the_game", () => {
+    setShowGame(true);
+    setPlayerChoosingWord(true);
+  });
   socket.on("start_round", (words: string[]) => {
     setRandomWords(words);
     setPlayersTurn(true);
@@ -78,6 +85,8 @@ function App() {
     });
   }, [playersInLobby]);
 
+  useEffect(() => {}, [playersTurn]);
+
   return (
     <div className="app-main-container">
       <AppContext.Provider
@@ -107,6 +116,7 @@ function App() {
                   penWidth={penWidth}
                   revealingWord={revealingWord}
                   randomWords={randomWords}
+                  playerChoosingWord={playerChoosingWord}
                 />
               </div>
               <GuessChat playersTurn={playersTurn} />

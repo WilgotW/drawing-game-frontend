@@ -3,6 +3,7 @@ import { socket } from "../../socket";
 import PenOptions from "../pen-options/PenOptions";
 import WordPopup from "../word-popup/WordPopup";
 import { AppContext } from "../../context/AppContext";
+import EndRoundPopup from "../EndRoundPopup/EndRoundPopup";
 
 interface IProps {
   playersTurn: boolean;
@@ -10,6 +11,7 @@ interface IProps {
   penWidth: number;
   revealingWord: string;
   randomWords: string[];
+  playerChoosingWord: boolean;
 }
 export default function CanvasDrawing({
   playersTurn,
@@ -17,6 +19,7 @@ export default function CanvasDrawing({
   penWidth,
   revealingWord,
   randomWords,
+  playerChoosingWord,
 }: IProps) {
   const { lobbyId } = useContext(AppContext);
 
@@ -88,12 +91,6 @@ export default function CanvasDrawing({
   }, [c]);
 
   useEffect(() => {
-    if (playersTurn) {
-      mouseController();
-    }
-  }, [playersTurn]);
-
-  useEffect(() => {
     if (!playersTurn) return;
     if (isMouseDown) {
       startPos.current = latestMousePositionRef.current;
@@ -121,7 +118,7 @@ export default function CanvasDrawing({
   }
 
   function draw() {
-    if (!c || !canvas) return;
+    if (!c || !canvas || !playersTurn) return;
     const { x, y } = latestMousePositionRef.current;
 
     c.strokeStyle = activeColor;
@@ -151,7 +148,9 @@ export default function CanvasDrawing({
   }
 
   function mouseController() {
-    if (!canvas) return;
+    if (!canvas || !playersTurn) return;
+
+    console.log("mouse");
 
     const handleMouseMove = (event) => {
       const rect = canvas.getBoundingClientRect();
@@ -198,6 +197,15 @@ export default function CanvasDrawing({
     };
   }
 
+  useEffect(() => {
+    console.log("this players turn: " + playersTurn);
+
+    if (playersTurn === true) {
+      console.log("is true");
+      mouseController();
+    }
+  }, [playersTurn, canvas]);
+
   return (
     <>
       <div>
@@ -205,9 +213,16 @@ export default function CanvasDrawing({
           className="draw-window"
           style={{ position: "relative", width: "100%", height: "100%" }}
         >
-          {playersTurn && !revealingWord && (
-            <WordPopup randomWords={randomWords} />
+          {playerChoosingWord && (
+            <>
+              {playersTurn ? (
+                <WordPopup randomWords={randomWords} />
+              ) : (
+                <EndRoundPopup />
+              )}
+            </>
           )}
+
           <canvas
             ref={canvasRef}
             style={{ width: "100%", height: "100%" }}
