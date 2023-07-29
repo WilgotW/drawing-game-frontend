@@ -36,52 +36,83 @@ export default function CanvasDrawing({
 
   const startPos = useRef({ x: 0, y: 0 });
 
+  const [sendCount, setSendCount] = useState<number>(0);
+
   // //determines how fast client send canvas data. Higher number can lower lag but decreases drawing accuracy for clients.
   // const canvasDataSpeed = 3;
   // const [dataSendCount, setDataSendCount] = useState<number>();
 
-  socket.on("end_round", () => {
-    clearCanvas();
-  });
+  // socket.on("end_round", () => {
+  //   if (!c || !canvas) return;
+  //   c.fillStyle = "white";
+  //   c.fillRect(0, 0, canvas.width, canvas.height);
+  // });
+  // socket.on("clear_canvas", () => {
+  //   if(c && canvas){
+  //     c.clearRect(0, 0, canvas.width, canvas.height);
+  //   }
+  //   setCanvas(undefined);
+  //   setC(undefined);
+  //   setIsMouseDown(false);
+  //   setIsCanvasHovered(false);
+  // });
 
-  const canvasDataQueue = [];
-  let isProcessingCanvasData = false;
+  useEffect(() => {
+    if (!playersTurn) {
+      animationRef.current = null;
+    }
+  }, [playersTurn]);
 
+  useEffect(() => {
+    if (sendCount >= 2) {
+      setSendCount(0);
+      sendCanvasData();
+    }
+  }, [sendCount]);
   socket.on("canvas_data", (imgData) => {
-    if (!isProcessingCanvasData) {
-      isProcessingCanvasData = true;
-      processCanvasData(imgData);
-    } else {
-      canvasDataQueue.push(imgData);
+    console.log("recieving");
+    if (!playersTurn) {
+      processData(imgData);
     }
   });
 
-  function processCanvasData(imgData) {
-    const img = new Image();
-    img.onload = () => {
-      c?.drawImage(img, 0, 0, canvas!.width, canvas!.height);
+  function processData(imgData) {
+    const canvasDataQueue: any = [];
+    let isProcessingCanvasData = false;
 
-      if (canvasDataQueue.length > 0) {
-        const nextImgData = canvasDataQueue.shift();
-        processCanvasData(nextImgData);
-      } else {
-        isProcessingCanvasData = false;
-      }
-    };
-    img.src = imgData;
+    if (!isProcessingCanvasData) {
+      isProcessingCanvasData = true;
+      const img = new Image();
+      img.onload = () => {
+        c?.drawImage(img, 0, 0, canvas!.width, canvas!.height);
+
+        if (canvasDataQueue.length > 0) {
+          const nextImgData = canvasDataQueue.shift();
+        } else {
+          isProcessingCanvasData = false;
+        }
+      };
+      img.src = imgData;
+    } else {
+      canvasDataQueue.push(imgData);
+    }
   }
 
   useEffect(() => {
     if (canvas) {
-      const _c = canvas.getContext("2d")!;
-      setC(_c);
-      canvas.width = 1000;
-      canvas.height = 700;
+      if (!c) {
+        const _c = canvas.getContext("2d")!;
+        setC(_c);
+        canvas.width = 1000;
+        canvas.height = 700;
+      }
     }
   }, [canvas]);
 
   useEffect(() => {
-    setCanvas(canvasRef.current!);
+    if (!canvas) {
+      setCanvas(canvasRef.current!);
+    }
   }, []);
 
   useEffect(() => {
@@ -110,10 +141,12 @@ export default function CanvasDrawing({
   }, [isCanvasHovered]);
 
   function sendCanvasData() {
+    if (!playersTurn) return;
     const imgData = canvas?.toDataURL();
     socket.emit("canvas_data", {
       imgData: imgData,
       lobbyId: lobbyId,
+      playersTurn: playersTurn,
     });
   }
 
@@ -134,23 +167,23 @@ export default function CanvasDrawing({
       startPos.current = { x, y };
     }
 
-    sendCanvasData();
-
     if (isMouseDown) {
+      setSendCount((prev) => prev + 1);
       animationRef.current = requestAnimationFrame(draw);
     }
   }
 
   function clearCanvas() {
-    c!.fillStyle = "white";
-    c!.fillRect(0, 0, canvas!.width, canvas!.height);
+    if (!c || !canvas) return;
+    c.fillStyle = "white";
+    c.fillRect(0, 0, canvas.width, canvas.height);
     sendCanvasData();
+    console.log("triggered");
   }
 
   function mouseController() {
-    if (!canvas || !playersTurn) return;
-
-    console.log("mouse");
+    if (!canvas) return;
+    let isMounted = true;
 
     const handleMouseMove = (event) => {
       const rect = canvas.getBoundingClientRect();
@@ -172,6 +205,8 @@ export default function CanvasDrawing({
 
     const handleMouseUp = () => {
       setIsMouseDown(false);
+      sendCanvasData();
+      console.log("triggered");
     };
 
     const handleMouseEnter = () => {
@@ -180,30 +215,42 @@ export default function CanvasDrawing({
 
     const handleMouseLeave = () => {
       setIsCanvasHovered(false);
+      console.log("triggered");
+      sendCanvasData();
     };
 
-    canvas.addEventListener("mousemove", handleMouseMove);
-    canvas.addEventListener("mousedown", handleMouseDown);
-    canvas.addEventListener("mouseup", handleMouseUp);
-    canvas.addEventListener("mouseenter", handleMouseEnter);
-    canvas.addEventListener("mouseleave", handleMouseLeave);
+    const setupMouseController = () => {
+      canvas?.addEventListener("mousemove", handleMouseMove);
+      canvas?.addEventListener("mousedown", handleMouseDown);
+      canvas?.addEventListener("mouseup", handleMouseUp);
+      canvas?.addEventListener("mouseenter", handleMouseEnter);
+      canvas?.addEventListener("mouseleave", handleMouseLeave);
+    };
+
+    const cleanupMouseController = () => {
+      canvas?.removeEventListener("mousemove", handleMouseMove);
+      canvas?.removeEventListener("mousedown", handleMouseDown);
+      canvas?.removeEventListener("mouseup", handleMouseUp);
+      canvas?.removeEventListener("mouseenter", handleMouseEnter);
+      canvas?.removeEventListener("mouseleave", handleMouseLeave);
+    };
+
+    if (playersTurn && isMounted) {
+      setupMouseController();
+    } else {
+      cleanupMouseController();
+    }
 
     return () => {
-      canvas.removeEventListener("mousemove", handleMouseMove);
-      canvas.removeEventListener("mousedown", handleMouseDown);
-      canvas.removeEventListener("mouseup", handleMouseUp);
-      canvas.removeEventListener("mouseenter", handleMouseEnter);
-      canvas.removeEventListener("mouseleave", handleMouseLeave);
+      isMounted = false;
+      cleanupMouseController();
     };
   }
 
   useEffect(() => {
     console.log("this players turn: " + playersTurn);
 
-    if (playersTurn === true) {
-      console.log("is true");
-      mouseController();
-    }
+    mouseController();
   }, [playersTurn, canvas]);
 
   return (
