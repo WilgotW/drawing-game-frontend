@@ -70,7 +70,6 @@ export default function CanvasDrawing({
     }
   }, [sendCount]);
   socket.on("canvas_data", (imgData) => {
-    console.log("recieving");
     if (!playersTurn) {
       processData(imgData);
     }
@@ -178,7 +177,6 @@ export default function CanvasDrawing({
     c.fillStyle = "white";
     c.fillRect(0, 0, canvas.width, canvas.height);
     sendCanvasData();
-    console.log("triggered");
   }
 
   function mouseController() {
@@ -206,7 +204,6 @@ export default function CanvasDrawing({
     const handleMouseUp = () => {
       setIsMouseDown(false);
       sendCanvasData();
-      console.log("triggered");
     };
 
     const handleMouseEnter = () => {
@@ -215,7 +212,6 @@ export default function CanvasDrawing({
 
     const handleMouseLeave = () => {
       setIsCanvasHovered(false);
-      console.log("triggered");
       sendCanvasData();
     };
 

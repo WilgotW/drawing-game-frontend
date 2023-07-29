@@ -12,6 +12,7 @@ import CanvasDrawing from "./components/canvas-drawing/CanvasDrawing";
 import { AppContext } from "./context/AppContext";
 import Menu from "./components/menu/Menu";
 import LobbyRoom from "./components/lobby-room/LobbyRoom";
+import TimeCountdown from "./components/time-countdown/TimeCountdown";
 
 interface PlayerProps {
   playerName: string;
@@ -106,6 +107,7 @@ function App() {
       >
         {showGame ? (
           <div style={{ display: "flex", flexDirection: "column" }}>
+            <TimeCountdown playersTurn={playersTurn} />
             <RevealingWord revealingWord={revealingWord} />
             <div style={{ display: "flex", gap: "10px" }}>
               <PlayersList />
