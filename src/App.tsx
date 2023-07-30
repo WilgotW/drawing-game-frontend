@@ -21,6 +21,7 @@ interface PlayerProps {
   joinedLobbyId: string;
   score: number;
   correctGuess: boolean;
+  thisRoundsScore: number;
 }
 
 function App() {
@@ -40,9 +41,15 @@ function App() {
   const [playersTurn, setPlayersTurn] = useState<boolean>(false);
   //main
   const [showGame, setShowGame] = useState<boolean>(false);
+  const [showEndRoundPopup, setShowEndRoundPopup] = useState<boolean>(false);
+  const [correctWord, setCorrectWord] = useState<string>("");
 
   socket.on("get_player_id", (playerId: string) => setThisPlayersId(playerId));
   socket.on("set_lobby_id", (lobbyId: string) => setLobbyId(lobbyId));
+  socket.on("end_round", (data) => {
+    setCorrectWord(data.correctWord);
+    setShowEndRoundPopup(true);
+  });
   socket.on("word_update", (word: string) => {
     setRevealingWord(word);
     setPlayerChoosingWord(false);
@@ -50,7 +57,9 @@ function App() {
   socket.on("starting_the_game", () => {
     setShowGame(true);
     setPlayerChoosingWord(true);
+    setShowEndRoundPopup(false);
   });
+
   socket.on("start_round", (words: string[]) => {
     setRandomWords(words);
     setPlayersTurn(true);
@@ -62,6 +71,7 @@ function App() {
       playersTurn: player.playersTurn,
       joinedLobbyId: player.joinedLobbyId,
       score: player.score,
+      thisRoundsScore: player.thisRoundsScore,
       correctGuess: player.correctGuess,
     }));
     setPlayersInLobby(newPlayersInLobby);
@@ -103,6 +113,7 @@ function App() {
           setLobbyId,
           lobbyId,
           thisPlayersId,
+          correctWord,
         }}
       >
         {showGame ? (
@@ -119,6 +130,7 @@ function App() {
                   revealingWord={revealingWord}
                   randomWords={randomWords}
                   playerChoosingWord={playerChoosingWord}
+                  showEndRoundPopup={showEndRoundPopup}
                 />
               </div>
               <GuessChat playersTurn={playersTurn} />

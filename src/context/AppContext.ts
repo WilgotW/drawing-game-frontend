@@ -6,6 +6,7 @@ interface PlayerProps {
   playersTurn: boolean;
   joinedLobbyId: string;
   score: number;
+  thisRoundsScore: number;
   correctGuess: boolean;
 }
 
@@ -21,6 +22,7 @@ interface AppContextType {
   setLobbyId: React.Dispatch<React.SetStateAction<string>>;
   lobbyId: string;
   thisPlayersId: string;
+  correctWord: string;
 }
 
 export const AppContext = createContext<AppContextType>({
@@ -35,4 +37,5 @@ export const AppContext = createContext<AppContextType>({
   setLobbyId: () => {},
   lobbyId: "",
   thisPlayersId: "",
+  correctWord: "",
 });

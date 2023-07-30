@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import "./EndRoundPopup.css";
+import "./WaitingForPlayerPopup.css";
 import { AppContext } from "../../context/AppContext";
-export default function EndRoundPopup() {
+export default function WaitingForPlayerPopup() {
   const { playersInLobby } = useContext(AppContext);
 
   const [playersName, setPlayersName] = useState<string>("");
@@ -23,7 +23,7 @@ export default function EndRoundPopup() {
           alignItems: "center",
         }}
       >
-        <h1>{playersName} picking a word</h1>
+        <h1>{playersName} is picking a word</h1>
       </div>
     </div>
   );

@@ -3,7 +3,8 @@ import { socket } from "../../socket";
 import PenOptions from "../pen-options/PenOptions";
 import WordPopup from "../word-popup/WordPopup";
 import { AppContext } from "../../context/AppContext";
-import EndRoundPopup from "../EndRoundPopup/EndRoundPopup";
+import WaitingForPlayerPopup from "../EndRoundPopup/WaitingForPlayerPopup";
+import EndRoundSummary from "../end-round-summary/EndRoundSummary";
 
 interface IProps {
   playersTurn: boolean;
@@ -12,6 +13,7 @@ interface IProps {
   revealingWord: string;
   randomWords: string[];
   playerChoosingWord: boolean;
+  showEndRoundPopup: boolean;
 }
 export default function CanvasDrawing({
   playersTurn,
@@ -20,6 +22,7 @@ export default function CanvasDrawing({
   revealingWord,
   randomWords,
   playerChoosingWord,
+  showEndRoundPopup,
 }: IProps) {
   const { lobbyId } = useContext(AppContext);
 
@@ -246,12 +249,13 @@ export default function CanvasDrawing({
           className="draw-window"
           style={{ position: "relative", width: "100%", height: "100%" }}
         >
+          {showEndRoundPopup && <EndRoundSummary />}
           {playerChoosingWord && (
             <>
               {playersTurn ? (
                 <WordPopup randomWords={randomWords} />
               ) : (
-                <EndRoundPopup />
+                <WaitingForPlayerPopup />
               )}
             </>
           )}

@@ -1,11 +1,15 @@
+:root {
+  --scale-clock: 0.7;
+}
 .time-countdown-main-container {
   position: absolute;
-  width: 100%;
+  width: fit-content;
   display: flex;
 }
 .time-countdown-container {
+  z-index: 1;
   display: flex;
-  background: white;
+  background: rgba(255, 255, 255, 0.1);
   align-items: center;
   height: 100px;
   width: 280px;
@@ -13,12 +17,16 @@
   border-radius: 20px;
   gap: 20px;
 }
+.time-count {
+  font-size: calc(34px * var(--scale-clock));
+}
 
 .time-clock {
-  width: 50px;
-  height: 50px;
+  width: calc(50px * var(--scale-clock));
+  height: calc(50px * var(--scale-clock));
   border-radius: 100px;
-  border: solid black 6px;
+  border: solid white calc(6px * var(--scale-clock));
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -29,15 +37,52 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 6px;
-  height: 25px;
+  width: calc(6px * var(--scale-clock));
+  height: calc(25px * var(--scale-clock));
   transform: translateX(-50%) translateY(-100%);
 }
 
 .clock-dial {
-  background: black;
-  border-radius: 5px;
+  background: white;
+  border-radius: calc(5px * var(--scale-clock));
   width: 100%;
   height: 100%;
   transform-origin: bottom center;
+  transition: 0.8s ease;
+}
+
+.clock-stand {
+  z-index: -1;
+  width: calc(5px * var(--scale-clock));
+  height: calc(15px * var(--scale-clock));
+  position: absolute;
+  border-radius: 10px;
+  background: white;
+  bottom: calc(-10px * var(--scale-clock));
+}
+.stand1 {
+  left: calc(2px * var(--scale-clock));
+  transform: rotate(45deg);
+}
+.stand2 {
+  left: calc(43px * var(--scale-clock));
+  transform: rotate(-45deg);
+}
+
+.clock-bell {
+  position: absolute;
+  top: calc(-13px * var(--scale-clock));
+  width: calc(24px * var(--scale-clock));
+  height: calc(12px * var(--scale-clock));
+  border-top-left-radius: calc(510px * var(--scale-clock));
+  border-top-right-radius: calc(510px * var(--scale-clock));
+  background: white;
+}
+.bell1 {
+  left: calc(-11px * var(--scale-clock));
+  transform: rotate(-39deg);
+}
+.bell2 {
+  left: calc(39px * var(--scale-clock));
+  transform: rotate(39deg);
 }

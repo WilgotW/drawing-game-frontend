@@ -13,6 +13,10 @@ export default function TimeCountdown({ playersTurn }: IProps) {
   const [timeLeft, setTimeLeft] = useState<number>(50);
   const [rotationAngle, setRotationAngle] = useState<number>(0);
 
+  socket.on("end_round", () => {
+    setTimeLeft(50);
+    setRotationAngle(0);
+  });
   useEffect(() => {
     socket.on("time_update", (time: number) => {
       setTimeLeft(time);
@@ -32,6 +36,11 @@ export default function TimeCountdown({ playersTurn }: IProps) {
     <div className="time-countdown-main-container">
       <div className="time-countdown-container">
         <div className="time-clock">
+          <div className="clock-bell bell1"></div>
+          <div className="clock-bell bell2"></div>
+
+          <div className="clock-stand stand1"></div>
+          <div className="clock-stand stand2"></div>
           <div className="clock-dial-container">
             <div
               className="clock-dial"
@@ -41,7 +50,13 @@ export default function TimeCountdown({ playersTurn }: IProps) {
             ></div>
           </div>
         </div>
-        <h1>{timeLeft}</h1>
+        <h1
+          className="time-count"
+          style={{ color: timeLeft <= 10 ? "red" : "white" }}
+        >
+          {timeLeft}
+        </h1>
+        <div>round: 1 / 3</div>
       </div>
     </div>
   );
