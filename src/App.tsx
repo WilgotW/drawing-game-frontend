@@ -32,6 +32,9 @@ function App() {
   const [playersInLobby, setPlayersInLobby] = useState<PlayerProps[]>([]);
   const [lobbyId, setLobbyId] = useState<string>("");
   const [playerChoosingWord, setPlayerChoosingWord] = useState<boolean>(false);
+  const [gameOver, setGameOver] = useState<boolean>(false);
+  const [roundsToPlay, setRoundsToPlay] = useState<number>(3);
+  const [currentRound, setCurrentRound] = useState<number>(0);
   //words
   const [randomWords, setRandomWords] = useState<string[]>([]);
   const [revealingWord, setRevealingWord] = useState<string>("");
@@ -39,6 +42,7 @@ function App() {
   const [userName, setUserName] = useState<string>("");
   const [thisPlayersId, setThisPlayersId] = useState<string>("");
   const [playersTurn, setPlayersTurn] = useState<boolean>(false);
+  const [isHost, setIsHost] = useState<boolean>(false);
   //main
   const [showGame, setShowGame] = useState<boolean>(false);
   const [showEndRoundPopup, setShowEndRoundPopup] = useState<boolean>(false);
@@ -54,7 +58,9 @@ function App() {
     setRevealingWord(word);
     setPlayerChoosingWord(false);
   });
-  socket.on("starting_the_game", () => {
+  socket.on("starting_the_game", (roundsPlayed: number) => {
+    setCurrentRound(roundsPlayed);
+    setGameOver(false);
     setShowGame(true);
     setPlayerChoosingWord(true);
     setShowEndRoundPopup(false);
@@ -65,6 +71,9 @@ function App() {
     setPlayersTurn(true);
   });
   socket.on("player_update", (playersList: any) => {
+    if (playersList.length === 1 && !isHost) {
+      setIsHost(true);
+    }
     const newPlayersInLobby = playersList.map((player) => ({
       playerName: player.playerName,
       playerId: player.playerId,
@@ -81,6 +90,10 @@ function App() {
     setRevealingWord("");
     setRandomWords([]);
     setPlayersTurn(false);
+  });
+
+  socket.on("end_whole_game", () => {
+    setGameOver(true);
   });
 
   useEffect(() => {
@@ -114,11 +127,16 @@ function App() {
           lobbyId,
           thisPlayersId,
           correctWord,
+          gameOver,
         }}
       >
         {showGame ? (
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <TimeCountdown playersTurn={playersTurn} />
+            <TimeCountdown
+              currentRound={currentRound}
+              roundsToPlay={roundsToPlay}
+              playersTurn={playersTurn}
+            />
             <RevealingWord revealingWord={revealingWord} />
             <div style={{ display: "flex", gap: "10px" }}>
               <PlayersList />
@@ -137,7 +155,17 @@ function App() {
             </div>
           </div>
         ) : (
-          <>{playersInLobby.length > 0 ? <LobbyRoom /> : <Menu />}</>
+          <>
+            {playersInLobby.length > 0 ? (
+              <LobbyRoom
+                roundsToPlay={roundsToPlay}
+                setRoundsToPlay={setRoundsToPlay}
+                isHost={isHost}
+              />
+            ) : (
+              <Menu />
+            )}
+          </>
         )}
       </AppContext.Provider>
     </div>

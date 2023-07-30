@@ -3,18 +3,65 @@
   display: flex;
   justify-content: center;
   width: 100%;
+  gap: 50px;
 }
-.lobby-room-main-container h1 {
+.lobby-room-container {
+  display: flex;
+  flex-direction: column;
+}
+.lobby-room-container h1 {
   margin-bottom: 20px;
   text-align: center;
   font-size: 40px;
   letter-spacing: 3px;
   color: white;
-  text-shadow: -2px -2px 0 rgba(54, 54, 54, 0.5),
-    2px -2px 0 rgba(54, 54, 54, 0.5), -2px 2px 0 rgba(54, 54, 54, 0.5),
-    2px 2px 0 rgba(54, 54, 54, 0.5);
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+.gray-filter {
+  /* filter: grayscale(50%) brightness(140%); */
+}
+.lobby-side-container {
+  border-radius: 4px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  height: 700px;
+  width: 500px;
+  background-color: #8a2be2;
+  background-image: radial-gradient(circle, #962be2 15%, transparent 16%),
+    radial-gradient(circle, #962be2 15%, transparent 16%);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+  border: solid white 3px;
+  border-radius: 20px;
+}
+.lobby-side-container h1 {
+  text-decoration: underline;
+  text-align: center;
+  color: white;
+  margin: 10px;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+.rounds-to-play-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.rounds-to-play-container button {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 30px;
+}
+.rounds-to-play-container span {
+  font-size: 25px;
+  color: white;
 }
 .lobby-room-player-list {
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
   position: relative;
   width: 600px;
   padding: 30px;

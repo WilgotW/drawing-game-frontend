@@ -23,6 +23,7 @@ interface AppContextType {
   lobbyId: string;
   thisPlayersId: string;
   correctWord: string;
+  gameOver: boolean;
 }
 
 export const AppContext = createContext<AppContextType>({
@@ -38,4 +39,5 @@ export const AppContext = createContext<AppContextType>({
   lobbyId: "",
   thisPlayersId: "",
   correctWord: "",
+  gameOver: false,
 });

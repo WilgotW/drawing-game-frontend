@@ -6,9 +6,15 @@ import { AppContext } from "../../context/AppContext";
 
 interface IProps {
   playersTurn: boolean;
+  roundsToPlay: number;
+  currentRound: number;
 }
 
-export default function TimeCountdown({ playersTurn }: IProps) {
+export default function TimeCountdown({
+  playersTurn,
+  roundsToPlay,
+  currentRound,
+}: IProps) {
   const { lobbyId } = useContext(AppContext);
   const [timeLeft, setTimeLeft] = useState<number>(50);
   const [rotationAngle, setRotationAngle] = useState<number>(0);
@@ -56,7 +62,9 @@ export default function TimeCountdown({ playersTurn }: IProps) {
         >
           {timeLeft}
         </h1>
-        <div>round: 1 / 3</div>
+        <span>
+          round: {currentRound} / {roundsToPlay}
+        </span>
       </div>
     </div>
   );

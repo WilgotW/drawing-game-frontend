@@ -5,6 +5,7 @@ import WordPopup from "../word-popup/WordPopup";
 import { AppContext } from "../../context/AppContext";
 import WaitingForPlayerPopup from "../EndRoundPopup/WaitingForPlayerPopup";
 import EndRoundSummary from "../end-round-summary/EndRoundSummary";
+import GameOverPopup from "../game-over-popup/GameOverPopup";
 
 interface IProps {
   playersTurn: boolean;
@@ -24,7 +25,7 @@ export default function CanvasDrawing({
   playerChoosingWord,
   showEndRoundPopup,
 }: IProps) {
-  const { lobbyId } = useContext(AppContext);
+  const { lobbyId, gameOver } = useContext(AppContext);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [canvas, setCanvas] = useState<HTMLCanvasElement>();
@@ -249,13 +250,19 @@ export default function CanvasDrawing({
           className="draw-window"
           style={{ position: "relative", width: "100%", height: "100%" }}
         >
-          {showEndRoundPopup && <EndRoundSummary />}
-          {playerChoosingWord && (
+          {gameOver ? (
+            <GameOverPopup />
+          ) : (
             <>
-              {playersTurn ? (
-                <WordPopup randomWords={randomWords} />
-              ) : (
-                <WaitingForPlayerPopup />
+              {showEndRoundPopup && <EndRoundSummary />}
+              {playerChoosingWord && (
+                <>
+                  {playersTurn ? (
+                    <WordPopup randomWords={randomWords} />
+                  ) : (
+                    <WaitingForPlayerPopup />
+                  )}
+                </>
               )}
             </>
           )}
