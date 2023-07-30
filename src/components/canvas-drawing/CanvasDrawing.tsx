@@ -36,26 +36,21 @@ export default function CanvasDrawing({
 
   const startPos = useRef({ x: 0, y: 0 });
 
+  //determines how fast client send canvas data. Higher number can lower lag but decreases drawing accuracy for clients.
   const [sendCount, setSendCount] = useState<number>(0);
+  const canvasDataSpeed = 2;
 
-  // //determines how fast client send canvas data. Higher number can lower lag but decreases drawing accuracy for clients.
-  // const canvasDataSpeed = 3;
-  // const [dataSendCount, setDataSendCount] = useState<number>();
-
-  // socket.on("end_round", () => {
-  //   if (!c || !canvas) return;
-  //   c.fillStyle = "white";
-  //   c.fillRect(0, 0, canvas.width, canvas.height);
-  // });
-  // socket.on("clear_canvas", () => {
-  //   if(c && canvas){
-  //     c.clearRect(0, 0, canvas.width, canvas.height);
-  //   }
-  //   setCanvas(undefined);
-  //   setC(undefined);
-  //   setIsMouseDown(false);
-  //   setIsCanvasHovered(false);
-  // });
+  socket.on("canvas_data", (imgData) => {
+    if (!playersTurn) {
+      processData(imgData);
+    }
+  });
+  socket.on("reset_canvas", () => {
+    if (!c || !canvas) return;
+    c.clearRect(0, 0, canvas.width, canvas.height);
+    c.fillStyle = "white";
+    c.fillRect(0, 0, canvas.width, canvas.height);
+  });
 
   useEffect(() => {
     if (!playersTurn) {
@@ -64,16 +59,11 @@ export default function CanvasDrawing({
   }, [playersTurn]);
 
   useEffect(() => {
-    if (sendCount >= 2) {
+    if (sendCount >= canvasDataSpeed) {
       setSendCount(0);
       sendCanvasData();
     }
   }, [sendCount]);
-  socket.on("canvas_data", (imgData) => {
-    if (!playersTurn) {
-      processData(imgData);
-    }
-  });
 
   function processData(imgData) {
     const canvasDataQueue: any = [];
