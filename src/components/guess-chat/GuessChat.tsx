@@ -30,6 +30,8 @@ export default function GuessChat({ playersTurn }: IProps) {
   useEffect(() => {
     if (playersTurn) {
       setCanGuess(false);
+    } else {
+      setCanGuess(true);
     }
   }, [playersTurn]);
 
@@ -45,7 +47,6 @@ export default function GuessChat({ playersTurn }: IProps) {
   return (
     <div className="guess-chat-main-container">
       <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
-        <h2>Guess Word</h2>
         <div className="chat-box">
           <div className="chat-feed">
             {chatMessages.map((message, index) => (

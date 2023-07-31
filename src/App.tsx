@@ -110,8 +110,6 @@ function App() {
     });
   }, [playersInLobby]);
 
-  useEffect(() => {}, [playersTurn]);
-
   return (
     <div className="app-main-container">
       <AppContext.Provider

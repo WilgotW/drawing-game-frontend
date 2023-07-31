@@ -3,6 +3,8 @@ import { socket } from "../../socket";
 import { FaBeer } from "react-icons/fa";
 import "./TimeCountdown.css";
 import { AppContext } from "../../context/AppContext";
+import clockSound from "../../sounds/clock-sound.wav";
+import playSound from "../../functions/playSound";
 
 interface IProps {
   playersTurn: boolean;
@@ -32,6 +34,9 @@ export default function TimeCountdown({
 
   useEffect(() => {
     if (!playersTurn) return;
+    if (timeLeft <= 10) {
+      playSound(clockSound);
+    }
     if (timeLeft <= 0) {
       setTimeLeft(50);
       socket.emit("time_over", lobbyId);
