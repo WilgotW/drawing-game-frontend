@@ -9,7 +9,9 @@
 .players-summary-list h1 {
   text-align: center;
   font-size: 50px;
-  color: lightgreen;
+
+  color: #b95ffa;
+
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
     1px 1px 0 #000;
 }

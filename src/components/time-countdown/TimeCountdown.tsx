@@ -41,30 +41,48 @@ export default function TimeCountdown({
   return (
     <div className="time-countdown-main-container">
       <div className="time-countdown-container">
-        <div className="time-clock">
+        <div
+          className={
+            timeLeft <= 10
+              ? timeLeft % 2 === 0
+                ? "time-clock red"
+                : "time-clock"
+              : "time-clock"
+          }
+        >
           <div className="clock-bell bell1"></div>
           <div className="clock-bell bell2"></div>
 
           <div className="clock-stand stand1"></div>
           <div className="clock-stand stand2"></div>
-          <div className="clock-dial-container">
+          <>
             <div
-              className="clock-dial"
-              style={{
-                transform: `rotate(${rotationAngle}deg)`,
-              }}
-            ></div>
-          </div>
+              style={{ background: "transparent" }}
+              className="clock-dial-container"
+            >
+              <div
+                className="clock-dial"
+                style={{
+                  transform: `rotate(${rotationAngle}deg)`,
+                }}
+              ></div>
+            </div>
+          </>
         </div>
         <h1
           className="time-count"
-          style={{ color: timeLeft <= 10 ? "red" : "white" }}
+          style={{
+            color:
+              timeLeft <= 10 ? (timeLeft % 2 === 0 ? "red" : "white") : "white",
+          }}
         >
           {timeLeft}
         </h1>
-        <span>
-          round: {currentRound} / {roundsToPlay}
-        </span>
+        <div className="round-container">
+          <span>
+            round: {currentRound} / {roundsToPlay}
+          </span>
+        </div>
       </div>
     </div>
   );

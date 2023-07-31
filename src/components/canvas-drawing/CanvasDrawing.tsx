@@ -255,14 +255,13 @@ export default function CanvasDrawing({
           ) : (
             <>
               {showEndRoundPopup && <EndRoundSummary />}
-              {playerChoosingWord && (
-                <>
-                  {playersTurn ? (
-                    <WordPopup randomWords={randomWords} />
-                  ) : (
-                    <WaitingForPlayerPopup />
-                  )}
-                </>
+              {playerChoosingWord && playersTurn && (
+                <WordPopup randomWords={randomWords} />
+              )}
+              {!playersTurn && (
+                <WaitingForPlayerPopup
+                  playerChoosingWord={playerChoosingWord}
+                />
               )}
             </>
           )}

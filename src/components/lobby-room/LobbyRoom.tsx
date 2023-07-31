@@ -28,7 +28,8 @@ export default function LobbyRoom({
 
   function changeRoundAmount(amount: number) {
     if (!isHost) return;
-    setRoundsToPlay((prev) => prev + amount);
+    const am = amount + roundsToPlay;
+    setRoundsToPlay(am);
   }
   useEffect(() => {
     if (roundsToPlay !== 0 && isHost) {

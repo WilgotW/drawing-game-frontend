@@ -5,6 +5,16 @@
   height: 100%;
   user-select: none;
   background: rgba(103, 103, 103, 0.3);
+  animation: slide-in 0.3s ease;
+  animation-iteration-count: 1;
+}
+@keyframes slide-in {
+  0% {
+    transform: translateY(-1000px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
 }
 .end-round-summary-container h1 {
   text-align: center;
@@ -26,4 +36,5 @@
 .player-summary-stats span {
   font-size: 25px;
   font-weight: bolder;
+  color: white;
 }

@@ -5,25 +5,38 @@
   position: absolute;
   width: fit-content;
   display: flex;
+  transform: translateY(-20px);
 }
 .time-countdown-container {
   position: relative;
   z-index: 1;
   display: flex;
   background: rgba(255, 255, 255, 0.1);
+  border: solid white 1px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
   align-items: center;
   height: 100px;
-  width: 280px;
+  width: 290px;
   padding-left: 20px;
+
   border-radius: 20px;
   gap: 20px;
 }
 .time-countdown-container span {
   position: absolute;
-  right: 10px;
-  height: 100%;
+  right: 45px;
+  font-size: 17px;
+  font-weight: bolder;
   text-align: center;
   color: white;
+}
+.round-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .time-count {
   font-size: calc(34px * var(--scale-clock));
@@ -39,6 +52,14 @@
   justify-content: center;
   align-items: center;
   position: relative;
+}
+.time-clock.red {
+  border: solid red calc(6px * var(--scale-clock));
+  transition: 0s;
+}
+.time-clock.red div {
+  background: red;
+  transition: 0s;
 }
 
 .clock-dial-container {

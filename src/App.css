@@ -33,6 +33,7 @@ canvas:hover {
   height: 100vh;
   display: flex;
   justify-content: center;
+  padding-top: 80px;
 }
 .revealing-word {
   background: rgba(255, 255, 255, 0.1);

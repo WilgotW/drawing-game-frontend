@@ -52,6 +52,7 @@ function App() {
   socket.on("set_lobby_id", (lobbyId: string) => setLobbyId(lobbyId));
   socket.on("end_round", (data) => {
     setCorrectWord(data.correctWord);
+    setCurrentRound(data.lobbyRound);
     setShowEndRoundPopup(true);
   });
   socket.on("word_update", (word: string) => {
