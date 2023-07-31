@@ -7,6 +7,9 @@
   background: rgba(103, 103, 103, 0.3);
   transform: translateY(-1000px);
 }
+.end-round-show {
+  transform: translateY(0px);
+}
 .animate {
   animation: slide-out 0.3s ease;
   animation-iteration-count: 1;

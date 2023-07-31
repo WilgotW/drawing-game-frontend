@@ -13,7 +13,9 @@ export default function WaitingForPlayerPopup({ playerChoosingWord }: IProps) {
   useEffect(() => {
     if (!playersInLobby) return;
     const player = playersInLobby.find((player) => player.playersTurn);
-    setPlayersName(player!.playerName);
+    if (player?.playerName) {
+      setPlayersName(player.playerName);
+    }
   }, [playersInLobby]);
 
   return (
@@ -28,7 +30,7 @@ export default function WaitingForPlayerPopup({ playerChoosingWord }: IProps) {
       <div
         className={
           playerChoosingWord
-            ? "end-round-main-container"
+            ? "end-round-main-container end-round-show"
             : "end-round-main-container animate"
         }
       >

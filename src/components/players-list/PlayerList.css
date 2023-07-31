@@ -17,7 +17,21 @@
   justify-content: space-around;
   align-items: center;
   border-radius: 20px;
+  transition: 0.5s ease;
 }
 .bordered-bottom {
   border-bottom: dotted white 5px;
+}
+.blink-white {
+  animation: blinkAnimation 5s infinite; /* Using a CSS animation for the white blink effect */
+}
+
+@keyframes blinkAnimation {
+  0%,
+  100% {
+    background: transparent; /* Start and end with transparent background */
+  }
+  50% {
+    background-color: white; /* Blink with white background in the middle of the animation */
+  }
 }
