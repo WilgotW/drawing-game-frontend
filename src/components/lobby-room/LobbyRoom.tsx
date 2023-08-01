@@ -8,14 +8,26 @@ interface IProps {
   isHost: boolean;
   roundsToPlay: number;
   setRoundsToPlay: React.Dispatch<React.SetStateAction<number>>;
+  timePerGame: number;
+  setTimePerGame: React.Dispatch<React.SetStateAction<number>>;
 }
 export default function LobbyRoom({
   isHost,
   roundsToPlay,
   setRoundsToPlay,
+  timePerGame,
+  setTimePerGame,
 }: IProps) {
   const { playersInLobby, lobbyId } = useContext(AppContext);
 
+  useEffect(() => {
+    if (roundsToPlay !== 0 && isHost) {
+      socket.emit("change_round_amount", {
+        lobbyId: lobbyId,
+        amount: roundsToPlay,
+      });
+    }
+  }, [roundsToPlay]);
   function startGame() {
     if (isHost) {
       socket.emit("start_game", lobbyId);
@@ -31,14 +43,15 @@ export default function LobbyRoom({
     const am = amount + roundsToPlay;
     setRoundsToPlay(am);
   }
-  useEffect(() => {
-    if (roundsToPlay !== 0 && isHost) {
-      socket.emit("change_round_amount", {
-        lobbyId: lobbyId,
-        amount: roundsToPlay,
-      });
-    }
-  }, [roundsToPlay]);
+  function changeTimePerGame(time: number) {
+    if (!isHost) return;
+    const newTime = time + timePerGame;
+    setTimePerGame(newTime);
+    socket.emit("change_time_game", {
+      lobbyId: lobbyId,
+      timePerGame: timePerGame,
+    });
+  }
   return (
     <div className="lobby-room-main-container">
       <div
@@ -107,6 +120,13 @@ export default function LobbyRoom({
           <button onClick={() => changeRoundAmount(-1)}> &#60; </button>
           <span>{roundsToPlay}</span>
           <button onClick={() => changeRoundAmount(1)}> &#62; </button>
+        </div>
+
+        <label>time per game:</label>
+        <div className="rounds-to-play-container">
+          <button onClick={() => changeTimePerGame(-10)}> &#60; </button>
+          <span>{timePerGame}</span>
+          <button onClick={() => changeTimePerGame(10)}> &#62; </button>
         </div>
       </div>
     </div>

@@ -10,25 +10,27 @@ interface IProps {
   playersTurn: boolean;
   roundsToPlay: number;
   currentRound: number;
+  timePerGame: number;
 }
 
 export default function TimeCountdown({
   playersTurn,
   roundsToPlay,
   currentRound,
+  timePerGame,
 }: IProps) {
   const { lobbyId } = useContext(AppContext);
   const [timeLeft, setTimeLeft] = useState<number>(50);
   const [rotationAngle, setRotationAngle] = useState<number>(0);
 
   socket.on("end_round", () => {
-    setTimeLeft(50);
+    setTimeLeft(timePerGame);
     setRotationAngle(0);
   });
   useEffect(() => {
     socket.on("time_update", (time: number) => {
       setTimeLeft(time);
-      setRotationAngle(360 - time * 7.2);
+      setRotationAngle(360 - time * (360 / timePerGame));
     });
   }, []);
 

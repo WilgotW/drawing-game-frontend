@@ -1,13 +1,14 @@
 import React, { useContext, useState, useEffect } from "react";
 import { AppContext } from "../../context/AppContext";
 import { socket } from "../../socket";
-
+import "./Menu.css";
 export default function Menu() {
   const [lobbyInput, setLobbyInput] = useState<string>("");
   const { setUserName, userName, setPlayersInLobby, playersInLobby } =
     useContext(AppContext);
 
   const [lobbyId, setLobbyId] = useState<string>("");
+  const [showJoin, setShowJoin] = useState<boolean>(false);
 
   socket.on("lobby_msg", (msg) => console.log(msg));
 
@@ -19,12 +20,9 @@ export default function Menu() {
     socket.emit("join_lobby", { lobbyId: lobbyInput, userName: userName });
   }
 
-  function sendToLobby() {
-    socket.emit("send_to_lobby", userName);
-  }
   return (
     <div>
-      <h1 style={{ color: "white", textAlign: "center" }}>Menu</h1>
+      <h1 style={{ color: "white", textAlign: "center" }}>[Logo]</h1>
       {playersInLobby && (
         <>
           {playersInLobby?.map((player) => (
@@ -36,7 +34,7 @@ export default function Menu() {
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: "5px",
+          gap: "15px",
           margin: "20px",
         }}
       >
@@ -46,15 +44,48 @@ export default function Menu() {
           onChange={(ev) => setUserName(ev.target.value)}
           value={userName}
         />
-        <input
-          placeholder="lobby id"
-          type="text"
-          onChange={(ev) => setLobbyInput(ev.target.value)}
-          value={lobbyInput}
-        />
-        <button onClick={() => createLobby()}>create lobby</button>
-        <button onClick={() => joinLobby()}>join lobby</button>
-        <button onClick={() => sendToLobby()}>sc</button>
+
+        <button className="menu-btn" onClick={() => createLobby()}>
+          create lobby
+        </button>
+        <div style={{ position: "relative", width: "100%" }}>
+          <button onClick={() => setShowJoin(!showJoin)} className="menu-btn">
+            join lobby
+          </button>
+          <div
+            className={
+              showJoin
+                ? "show-join join-inputs-container"
+                : "join-inputs-container"
+            }
+            style={{ display: "flex", justifyContent: "center" }}
+          >
+            <div className="lobby-id-input">
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <input
+                    placeholder="lobby id"
+                    type="text"
+                    onChange={(ev) => setLobbyInput(ev.target.value)}
+                    value={lobbyInput}
+                  />
+                </div>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <button className="join-btn" onClick={() => joinLobby()}>
+                    Join!
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

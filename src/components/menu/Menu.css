@@ -1,0 +1,61 @@
+.menu-btn {
+  z-index: 1;
+
+  width: 300px;
+  height: 70px;
+  font-size: 20px;
+  border: solid 1px white;
+  border-radius: 10px;
+  background: transparent;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  font-family: "Kanit", sans-serif;
+  cursor: pointer;
+  color: white;
+  z-index: 1;
+}
+.lobby-id-input {
+  width: 95%;
+  background-color: #8a2be2;
+
+  border: solid 2px white;
+  display: flex;
+  justify-content: center;
+  height: 100px;
+  align-items: center;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.lobby-id-input input {
+  width: 90%;
+  height: 30px;
+  border: none;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+.join-btn {
+  width: 90%;
+  height: 30px;
+  border: solid 1px white;
+  border-radius: 10px;
+  background: transparent;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+
+  color: white;
+}
+.join-inputs-container {
+  transform: translateY(-100px) scaleY(0.3);
+  z-index: -1;
+  transition: 0.3s ease;
+}
+.show-join {
+  /* animation: show-inputs-slide-in 0.3s ease;
+  animation-iteration-count: 1; */
+  transform: translateX(0px) scaleY(1);
+}
+@keyframes show-inputs-slide-in {
+  100% {
+    transform: translateX(0px) scale(1);
+  }
+}

@@ -35,6 +35,7 @@ function App() {
   const [gameOver, setGameOver] = useState<boolean>(false);
   const [roundsToPlay, setRoundsToPlay] = useState<number>(3);
   const [currentRound, setCurrentRound] = useState<number>(0);
+  const [timePerGame, setTimePerGame] = useState<number>(0);
   //words
   const [randomWords, setRandomWords] = useState<string[]>([]);
   const [revealingWord, setRevealingWord] = useState<string>("");
@@ -135,6 +136,7 @@ function App() {
               currentRound={currentRound}
               roundsToPlay={roundsToPlay}
               playersTurn={playersTurn}
+              timePerGame={timePerGame}
             />
             <RevealingWord revealingWord={revealingWord} />
             <div style={{ display: "flex", gap: "10px" }}>
@@ -160,6 +162,8 @@ function App() {
                 roundsToPlay={roundsToPlay}
                 setRoundsToPlay={setRoundsToPlay}
                 isHost={isHost}
+                setTimePerGame={setTimePerGame}
+                timePerGame={timePerGame}
               />
             ) : (
               <Menu />
