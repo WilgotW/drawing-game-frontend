@@ -35,7 +35,7 @@ function App() {
   const [gameOver, setGameOver] = useState<boolean>(false);
   const [roundsToPlay, setRoundsToPlay] = useState<number>(3);
   const [currentRound, setCurrentRound] = useState<number>(0);
-  const [timePerGame, setTimePerGame] = useState<number>(0);
+  const [timePerGame, setTimePerGame] = useState<number>(50);
   //words
   const [randomWords, setRandomWords] = useState<string[]>([]);
   const [revealingWord, setRevealingWord] = useState<string>("");

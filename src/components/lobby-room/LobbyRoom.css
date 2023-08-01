@@ -21,6 +21,10 @@
 .gray-filter {
   /* filter: grayscale(50%) brightness(140%); */
 }
+.lobby-settings {
+  display: flex;
+  flex-direction: column;
+}
 .lobby-side-container {
   border-radius: 4px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
@@ -42,23 +46,80 @@
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
     1px 1px 0 #000;
 }
-.rounds-to-play-container {
+.character-customization-container {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
+  flex-direction: column;
+  gap: 10px;
 }
-.rounds-to-play-container button {
-  width: 30px;
+.player-customization-inputs {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding-top: 30px;
+}
+.player-customization-inputs label {
+  position: absolute;
+  top: 0;
+  left: 63px;
+  font-size: 18px;
+  color: white;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+.player-name-input {
+  text-align: center;
+  width: 300px;
   height: 30px;
   border: none;
   border-radius: 10px;
+  font-size: 18px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+.customization-btn {
+  width: 70px;
+  height: 30px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+.customization-btn:hover {
+  filter: brightness(110%);
+}
+.rounds-to-play-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 50px;
+  width: 80%;
+}
+.rounds-to-play-container button {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 10px;
   text-align: center;
+  display: flex;
+  justify-content: center;
   font-size: 30px;
+}
+.rounds-to-play-container select {
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  width: 200px;
+  height: 30px;
 }
 .rounds-to-play-container span {
   font-size: 25px;
   color: white;
+}
+.rounds-to-play-container label {
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
+  color: white;
+  font-size: 18px;
+  padding: 5px;
 }
 .lobby-room-player-list {
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);

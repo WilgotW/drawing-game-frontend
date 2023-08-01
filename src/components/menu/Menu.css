@@ -1,17 +1,20 @@
 .menu-btn {
-  z-index: 1;
-
   width: 300px;
   height: 70px;
   font-size: 20px;
   border: solid 1px white;
   border-radius: 10px;
-  background: transparent;
+  background-color: #8a2be2;
+  background-image: radial-gradient(circle, #962be2 15%, transparent 16%),
+    radial-gradient(circle, #962be2 15%, transparent 16%);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
   font-family: "Kanit", sans-serif;
   cursor: pointer;
   color: white;
-  z-index: 1;
+  z-index: 100;
+  position: relative;
 }
 .lobby-id-input {
   width: 95%;
@@ -43,13 +46,15 @@
   cursor: pointer;
 
   color: white;
+  z-index: 1;
 }
 .join-inputs-container {
   transform: translateY(-100px) scaleY(0.3);
-  z-index: -1;
+
   transition: 0.3s ease;
 }
 .show-join {
+  z-index: -10;
   /* animation: show-inputs-slide-in 0.3s ease;
   animation-iteration-count: 1; */
   transform: translateX(0px) scaleY(1);

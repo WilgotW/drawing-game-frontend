@@ -13,11 +13,11 @@ export default function Menu() {
   socket.on("lobby_msg", (msg) => console.log(msg));
 
   function createLobby() {
-    socket.emit("create_lobby", userName);
+    socket.emit("create_lobby", "player");
   }
   function joinLobby() {
     console.log("lobby input: " + lobbyInput);
-    socket.emit("join_lobby", { lobbyId: lobbyInput, userName: userName });
+    socket.emit("join_lobby", { lobbyId: lobbyInput, userName: "player" });
   }
 
   return (
@@ -38,13 +38,6 @@ export default function Menu() {
           margin: "20px",
         }}
       >
-        <input
-          placeholder="username"
-          type="text"
-          onChange={(ev) => setUserName(ev.target.value)}
-          value={userName}
-        />
-
         <button className="menu-btn" onClick={() => createLobby()}>
           create lobby
         </button>

@@ -18,7 +18,29 @@ export default function LobbyRoom({
   timePerGame,
   setTimePerGame,
 }: IProps) {
-  const { playersInLobby, lobbyId } = useContext(AppContext);
+  const { playersInLobby, lobbyId, setUserName, userName, thisPlayersId } =
+    useContext(AppContext);
+
+  const roundOptions = [
+    { value: 1, label: "1" },
+    { value: 2, label: "2" },
+    { value: 3, label: "3" },
+    { value: 4, label: "4" },
+    { value: 5, label: "5" },
+    { value: 6, label: "6" },
+    { value: 7, label: "7" },
+    { value: 8, label: "8" },
+  ];
+  const timeOptions = [
+    { value: 10, label: "10" },
+    { value: 20, label: "20" },
+    { value: 30, label: "30" },
+    { value: 40, label: "40" },
+    { value: 50, label: "50" },
+    { value: 60, label: "60" },
+    { value: 70, label: "70" },
+    { value: 80, label: "80" },
+  ];
 
   useEffect(() => {
     if (roundsToPlay !== 0 && isHost) {
@@ -28,6 +50,15 @@ export default function LobbyRoom({
       });
     }
   }, [roundsToPlay]);
+
+  function changeUserName() {
+    socket.emit("change_username", {
+      lobbyId: lobbyId,
+      playerId: thisPlayersId,
+      userName: userName,
+    });
+  }
+
   function startGame() {
     if (isHost) {
       socket.emit("start_game", lobbyId);
@@ -38,30 +69,49 @@ export default function LobbyRoom({
     navigator.clipboard.writeText(lobbyId);
   }
 
-  function changeRoundAmount(amount: number) {
+  // function changeRoundAmount(amount: number) {
+  //   if (!isHost) return;
+  //   const am = amount + roundsToPlay;
+  //   setRoundsToPlay(am);
+  // }
+  function changeTimePerGame(_time: number) {
     if (!isHost) return;
-    const am = amount + roundsToPlay;
-    setRoundsToPlay(am);
+    setTimePerGame((prev) => prev + _time);
   }
-  function changeTimePerGame(time: number) {
-    if (!isHost) return;
-    const newTime = time + timePerGame;
-    setTimePerGame(newTime);
-    socket.emit("change_time_game", {
-      lobbyId: lobbyId,
-      timePerGame: timePerGame,
-    });
-  }
+  useEffect(() => {
+    if (timePerGame > 0) {
+      socket.emit("change_time_game", {
+        lobbyId: lobbyId,
+        timePerGame: timePerGame,
+      });
+    }
+  }, [timePerGame]);
   return (
     <div className="lobby-room-main-container">
       <div
         className={
           isHost
-            ? "lobby-side-container character-customization"
-            : "gray-filter lobby-side-container character-customization"
+            ? "lobby-side-container character-customization-container"
+            : "gray-filter lobby-side-container character-customization-container"
         }
       >
         <h1>character customization</h1>
+
+        <div className="player-customization-inputs">
+          <label>user name</label>
+          <input
+            className="player-name-input"
+            type="text"
+            value={userName}
+            onChange={(ev) => setUserName(ev.target.value)}
+          />
+          <button
+            className="customization-btn"
+            onClick={() => changeUserName()}
+          >
+            save
+          </button>
+        </div>
       </div>
       <div className="lobby-room-container">
         <h1>Lobby Room</h1>
@@ -115,18 +165,53 @@ export default function LobbyRoom({
         }
       >
         <h1>Lobby options</h1>
-        <label>round:</label>
-        <div className="rounds-to-play-container">
-          <button onClick={() => changeRoundAmount(-1)}> &#60; </button>
-          <span>{roundsToPlay}</span>
-          <button onClick={() => changeRoundAmount(1)}> &#62; </button>
-        </div>
+        <div>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <div className="rounds-to-play-container">
+              <label>rounds: </label>
+              <select
+                value={roundsToPlay}
+                onChange={(ev) => setRoundsToPlay(parseInt(ev.target.value))}
+              >
+                {roundOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+              {/* <button onClick={() => setR(-1)}> &#60; </button>
+              <span>{roundsToPlay}</span>
+              <button onClick={() => changeRoundAmount(1)}> &#62; </button> */}
+            </div>
+          </div>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <div className="rounds-to-play-container">
+              <label>time per game:</label>
 
-        <label>time per game:</label>
-        <div className="rounds-to-play-container">
-          <button onClick={() => changeTimePerGame(-10)}> &#60; </button>
-          <span>{timePerGame}</span>
-          <button onClick={() => changeTimePerGame(10)}> &#62; </button>
+              <select
+                value={timePerGame}
+                onChange={(ev) => setTimePerGame(parseInt(ev.target.value))}
+              >
+                {timeOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -28,6 +28,7 @@ export default function TimeCountdown({
     setRotationAngle(0);
   });
   useEffect(() => {
+    setTimeLeft(timePerGame);
     socket.on("time_update", (time: number) => {
       setTimeLeft(time);
       setRotationAngle(360 - time * (360 / timePerGame));
@@ -40,7 +41,7 @@ export default function TimeCountdown({
       playSound(clockSound);
     }
     if (timeLeft <= 0) {
-      setTimeLeft(50);
+      setTimeLeft(timePerGame);
       socket.emit("time_over", lobbyId);
     }
   }, [timeLeft]);
