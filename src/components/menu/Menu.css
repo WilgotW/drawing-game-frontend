@@ -1,3 +1,14 @@
+.menu-logo {
+  width: 100px;
+  height: 100px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.menu-logo img {
+  transform: scale(0.1);
+}
 .menu-btn {
   width: 300px;
   height: 70px;

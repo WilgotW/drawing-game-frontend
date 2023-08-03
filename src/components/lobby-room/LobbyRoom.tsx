@@ -4,25 +4,21 @@ import "./LobbyRoom.css";
 import { BiCopyAlt } from "react-icons/bi";
 import { socket } from "../../socket";
 import body from "../../assets/body.png";
-import head1 from "../../assets/parts/head1.png";
-import head2 from "../../assets/parts/head2.png";
-import head3 from "../../assets/parts/head3.png";
-import head4 from "../../assets/parts/head4.png";
-import eye1 from "../../assets/parts/eyes1.png";
-import eye2 from "../../assets/parts/eyes2.png";
-import eye3 from "../../assets/parts/eyes3.png";
-import eye4 from "../../assets/parts/eyes4.png";
 interface IProps {
   isHost: boolean;
   roundsToPlay: number;
   setRoundsToPlay: React.Dispatch<React.SetStateAction<number>>;
   timePerGame: number;
   setTimePerGame: React.Dispatch<React.SetStateAction<number>>;
+  headCustomizations: ImageType[];
+  eyeCustomizations: ImageType[];
+  selectedHead: number;
+  selectedEye: number;
+  setSelectedHead: React.Dispatch<React.SetStateAction<number>>;
+  setSelectedEye: React.Dispatch<React.SetStateAction<number>>;
 }
 
 type ImageType = string;
-const headImages: ImageType[] = [head1, head2, head3, head4];
-const eyeImages: ImageType[] = [eye1, eye2, eye3, eye4];
 
 export default function LobbyRoom({
   isHost,
@@ -30,6 +26,12 @@ export default function LobbyRoom({
   setRoundsToPlay,
   timePerGame,
   setTimePerGame,
+  headCustomizations,
+  eyeCustomizations,
+  selectedHead,
+  selectedEye,
+  setSelectedHead,
+  setSelectedEye,
 }: IProps) {
   const { playersInLobby, lobbyId, setUserName, userName, thisPlayersId } =
     useContext(AppContext);
@@ -54,14 +56,6 @@ export default function LobbyRoom({
     { value: 70, label: "70" },
     { value: 80, label: "80" },
   ];
-
-  const [headCustomizations, setHeadCustomizations] =
-    useState<ImageType[]>(headImages);
-  const [selectedHead, setSelectedHead] = useState<number>(0);
-
-  const [eyeCustomizations, setEyeCustomizations] =
-    useState<ImageType[]>(eyeImages);
-  const [selectedEye, setSelectedEye] = useState<number>(0);
 
   useEffect(() => {
     if (roundsToPlay !== 0 && isHost) {

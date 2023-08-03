@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { AppContext } from "../../context/AppContext";
 import { socket } from "../../socket";
 import "./Menu.css";
+import logo from "../../assets/Logo.png";
 export default function Menu() {
   const [lobbyInput, setLobbyInput] = useState<string>("");
   const { setUserName, userName, setPlayersInLobby, playersInLobby } =
@@ -22,7 +23,15 @@ export default function Menu() {
 
   return (
     <div>
-      <h1 style={{ color: "white", textAlign: "center" }}>[Logo]</h1>
+      <img
+        style={{
+          width: "350px",
+          height: "250px",
+          position: "absolute",
+        }}
+        src={logo}
+        alt=""
+      />
       {playersInLobby && (
         <>
           {playersInLobby?.map((player) => (
@@ -36,6 +45,7 @@ export default function Menu() {
           flexDirection: "column",
           gap: "15px",
           margin: "20px",
+          marginTop: "200px",
         }}
       >
         <button className="menu-btn" onClick={() => createLobby()}>

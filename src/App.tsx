@@ -1,10 +1,6 @@
 import "./App.css";
-import DrawingSpace from "./components/drawing-space/DrawingSpace";
 import { useEffect, useState } from "react";
-import PenOptions from "./components/pen-options/PenOptions";
-import WordSystem from "./components/word-system/WordSystem";
 import { socket } from "./socket";
-import WordPopup from "./components/word-popup/WordPopup";
 import RevealingWord from "./components/revealing-word/RevealingWord";
 import PlayersList from "./components/players-list/PlayersList";
 import GuessChat from "./components/guess-chat/GuessChat";
@@ -13,6 +9,19 @@ import { AppContext } from "./context/AppContext";
 import Menu from "./components/menu/Menu";
 import LobbyRoom from "./components/lobby-room/LobbyRoom";
 import TimeCountdown from "./components/time-countdown/TimeCountdown";
+
+import head1 from "./assets/parts/head1.png";
+import head2 from "./assets/parts/head2.png";
+import head3 from "./assets/parts/head3.png";
+import head4 from "./assets/parts/head4.png";
+import eye1 from "./assets/parts/eyes1.png";
+import eye2 from "./assets/parts/eyes2.png";
+import eye3 from "./assets/parts/eyes3.png";
+import eye4 from "./assets/parts/eyes4.png";
+
+type ImageType = string;
+const headImages: ImageType[] = [head1, head2, head3, head4];
+const eyeImages: ImageType[] = [eye1, eye2, eye3, eye4];
 
 interface customizationsProps {
   head: number;
@@ -49,6 +58,13 @@ function App() {
   const [thisPlayersId, setThisPlayersId] = useState<string>("");
   const [playersTurn, setPlayersTurn] = useState<boolean>(false);
   const [isHost, setIsHost] = useState<boolean>(false);
+  const [headCustomizations, setHeadCustomizations] =
+    useState<ImageType[]>(headImages);
+  const [selectedHead, setSelectedHead] = useState<number>(0);
+  const [eyeCustomizations, setEyeCustomizations] =
+    useState<ImageType[]>(eyeImages);
+  const [selectedEye, setSelectedEye] = useState<number>(0);
+
   //main
   const [showGame, setShowGame] = useState<boolean>(false);
   const [showEndRoundPopup, setShowEndRoundPopup] = useState<boolean>(false);
@@ -146,7 +162,14 @@ function App() {
             />
             <RevealingWord revealingWord={revealingWord} />
             <div style={{ display: "flex", gap: "10px" }}>
-              <PlayersList />
+              <PlayersList
+                headCustomizations={headCustomizations}
+                eyeCustomizations={eyeCustomizations}
+                selectedHead={selectedHead}
+                selectedEye={selectedEye}
+                setSelectedEye={setSelectedEye}
+                setSelectedHead={setSelectedHead}
+              />
               <div style={{ display: "flex", flexDirection: "column" }}>
                 <CanvasDrawing
                   playersTurn={playersTurn}
@@ -170,6 +193,12 @@ function App() {
                 isHost={isHost}
                 setTimePerGame={setTimePerGame}
                 timePerGame={timePerGame}
+                headCustomizations={headCustomizations}
+                eyeCustomizations={eyeCustomizations}
+                selectedHead={selectedHead}
+                selectedEye={selectedEye}
+                setSelectedEye={setSelectedEye}
+                setSelectedHead={setSelectedHead}
               />
             ) : (
               <Menu />

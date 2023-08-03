@@ -3,8 +3,27 @@ import "./PlayerList.css";
 import { AppContext } from "../../context/AppContext";
 import popSound from "../../sounds/pop-sound.wav";
 import playSound from "../../functions/playSound";
+import body from "../../assets/body.png";
 
-export default function PlayersList() {
+interface IProps {
+  headCustomizations: ImageType[];
+  eyeCustomizations: ImageType[];
+  selectedHead: number;
+  selectedEye: number;
+  setSelectedHead: React.Dispatch<React.SetStateAction<number>>;
+  setSelectedEye: React.Dispatch<React.SetStateAction<number>>;
+}
+
+type ImageType = string;
+
+export default function PlayersList({
+  headCustomizations,
+  eyeCustomizations,
+  selectedHead,
+  selectedEye,
+  setSelectedHead,
+  setSelectedEye,
+}: IProps) {
   const { playersInLobby, thisPlayersId } = useContext(AppContext);
   const [sortedPlayers, setSortedPlayers] = useState([...playersInLobby]);
   const [scoreAddedPlayer, setScoreAddedPlayer] = useState<string>();
@@ -42,23 +61,49 @@ export default function PlayersList() {
             className={"player-card"}
             style={{ color: player.correctGuess ? "lightgreen" : "white" }}
           >
-            <div className="player-profile"></div>
-            <>
-              <div
-                style={{
-                  width: "fit-content",
-                  display: "flex",
-                  gap: "5px",
-                }}
-              >
-                {player.playerName}
-                <div>{player.playerId === thisPlayersId && <b> [you]</b>}</div>
+            <div
+              style={{ transform: "scale(0.6)", background: "none" }}
+              className="lobby-player-card"
+            >
+              <div className="player-card-body">
+                <img src={body} alt="" />
               </div>
-            </>
+              <div className="head-customizations">
+                <img
+                  className={`lobby-head-img-${player.customizations.head}-card`}
+                  src={headCustomizations[player.customizations.head]}
+                  alt=""
+                />
+              </div>
+              <div style={{ top: "65px" }} className="eye-customizations">
+                <img
+                  className={`lobby-eye-img-${player.customizations.eye}-card`}
+                  src={eyeCustomizations[player.customizations.eye]}
+                  alt=""
+                />
+              </div>
+            </div>
 
-            <span className={index === 0 ? "player-first-place" : ""}>
-              score: {player.score}
-            </span>
+            <div>
+              <>
+                <div
+                  style={{
+                    width: "fit-content",
+                    display: "flex",
+                    gap: "5px",
+                  }}
+                >
+                  {player.playerName}
+                  <div>
+                    {player.playerId === thisPlayersId && <b> [you]</b>}
+                  </div>
+                </div>
+              </>
+
+              <span className={index === 0 ? "player-first-place" : ""}>
+                score: {player.score}
+              </span>
+            </div>
           </div>
         </div>
       ))}
