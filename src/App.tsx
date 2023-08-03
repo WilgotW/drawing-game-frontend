@@ -14,6 +14,10 @@ import Menu from "./components/menu/Menu";
 import LobbyRoom from "./components/lobby-room/LobbyRoom";
 import TimeCountdown from "./components/time-countdown/TimeCountdown";
 
+interface customizationsProps {
+  head: number;
+  eye: number;
+}
 interface PlayerProps {
   playerName: string;
   playerId: string;
@@ -22,6 +26,7 @@ interface PlayerProps {
   score: number;
   correctGuess: boolean;
   thisRoundsScore: number;
+  customizations: customizationsProps;
 }
 
 function App() {
@@ -84,6 +89,7 @@ function App() {
       score: player.score,
       thisRoundsScore: player.thisRoundsScore,
       correctGuess: player.correctGuess,
+      customizations: player.customizations,
     }));
     setPlayersInLobby(newPlayersInLobby);
   });

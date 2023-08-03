@@ -1,3 +1,6 @@
+img {
+  user-select: none;
+}
 .lobby-room-main-container {
   padding: 50px;
   display: flex;
@@ -223,4 +226,170 @@
   background: transparent;
   border: solid 1px black;
   transform: scale(1.1);
+}
+.player-customization-part-container {
+  height: 400px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.eye-customizations {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+}
+.lobby-eye-img-0 {
+  pointer-events: none;
+  width: 14%;
+  height: 14%;
+}
+.lobby-eye-img-0-card {
+  pointer-events: none;
+  width: 22%;
+  height: 22%;
+}
+.lobby-eye-img-1 {
+  pointer-events: none;
+  width: 18%;
+  height: 18%;
+}
+.lobby-eye-img-1-card {
+  pointer-events: none;
+  transform: translateY(5px);
+  width: 25%;
+  height: 25%;
+}
+.lobby-eye-img-2 {
+  pointer-events: none;
+  width: 24%;
+  height: 24%;
+  transform: translateX(3px) translateY(-10px);
+}
+.lobby-eye-img-2-card {
+  pointer-events: none;
+  width: 36%;
+  height: 36%;
+  transform: translateX(1px) translateY(2px);
+}
+.lobby-eye-img-3 {
+  user-select: none;
+  pointer-events: none;
+  width: 24%;
+  height: 24%;
+  transform: translateX(2px) translateY(-20px);
+}
+.lobby-eye-img-3-card {
+  user-select: none;
+  pointer-events: none;
+  width: 39%;
+  height: 39%;
+  transform: translateX(2px) translateY(-7px);
+}
+.head-customizations {
+  position: absolute;
+  top: 10px;
+  display: flex;
+  justify-content: center;
+}
+.lobby-head-img-0 {
+  pointer-events: none;
+  width: 11%;
+  height: 11%;
+}
+.lobby-head-img-0-card {
+  width: 17%;
+  width: 17%;
+}
+.lobby-head-img-1 {
+  transform: translateY(8px);
+  pointer-events: none;
+  width: 20%;
+  height: 20%;
+}
+.lobby-head-img-1-card {
+  transform: translateY(8px);
+  width: 30%;
+  width: 30%;
+}
+.lobby-head-img-2 {
+  transform: translateY(20px);
+  pointer-events: none;
+  width: 16%;
+  height: 16%;
+}
+.lobby-head-img-2-card {
+  transform: translateY(13px);
+  pointer-events: none;
+  width: 25%;
+  height: 25%;
+}
+.lobby-head-img-3 {
+  transform: translateY(30px) translateX(-5px);
+  pointer-events: none;
+  width: 20%;
+  height: 20%;
+}
+.lobby-head-img-3-card {
+  transform: translateY(20px) translateX(-3px);
+  pointer-events: none;
+  width: 30%;
+  height: 30%;
+}
+.lobby-player-body {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lobby-player-body-img {
+  pointer-events: none;
+  width: 30%;
+  height: 30%;
+}
+.switch-customization-part-buttons {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.switch-customization-part-buttons button {
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+  border: none;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  border-radius: 10px;
+}
+.switch-customization-part-buttons button:hover {
+  filter: brightness(110%);
+}
+.save-cutomizations-btn {
+  width: 50%;
+  height: 30px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+.save-cutomizations-btn:hover {
+  filter: brightness(110%);
+}
+
+.lobby-player-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.player-card-body {
+  width: fit-content;
+  display: flex;
+  justify-content: center;
+}
+.player-card-body img {
+  width: 45%;
+  height: 45%;
 }

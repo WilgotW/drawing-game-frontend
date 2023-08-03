@@ -1,13 +1,18 @@
 import React, { createContext } from "react";
 
+interface customizationsProps {
+  head: number;
+  eye: number;
+}
 interface PlayerProps {
   playerName: string;
   playerId: string;
   playersTurn: boolean;
   joinedLobbyId: string;
   score: number;
-  thisRoundsScore: number;
   correctGuess: boolean;
+  thisRoundsScore: number;
+  customizations: customizationsProps;
 }
 
 interface AppContextType {

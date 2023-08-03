@@ -3,7 +3,15 @@ import { AppContext } from "../../context/AppContext";
 import "./LobbyRoom.css";
 import { BiCopyAlt } from "react-icons/bi";
 import { socket } from "../../socket";
-
+import body from "../../assets/body.png";
+import head1 from "../../assets/parts/head1.png";
+import head2 from "../../assets/parts/head2.png";
+import head3 from "../../assets/parts/head3.png";
+import head4 from "../../assets/parts/head4.png";
+import eye1 from "../../assets/parts/eyes1.png";
+import eye2 from "../../assets/parts/eyes2.png";
+import eye3 from "../../assets/parts/eyes3.png";
+import eye4 from "../../assets/parts/eyes4.png";
 interface IProps {
   isHost: boolean;
   roundsToPlay: number;
@@ -11,6 +19,11 @@ interface IProps {
   timePerGame: number;
   setTimePerGame: React.Dispatch<React.SetStateAction<number>>;
 }
+
+type ImageType = string;
+const headImages: ImageType[] = [head1, head2, head3, head4];
+const eyeImages: ImageType[] = [eye1, eye2, eye3, eye4];
+
 export default function LobbyRoom({
   isHost,
   roundsToPlay,
@@ -42,6 +55,14 @@ export default function LobbyRoom({
     { value: 80, label: "80" },
   ];
 
+  const [headCustomizations, setHeadCustomizations] =
+    useState<ImageType[]>(headImages);
+  const [selectedHead, setSelectedHead] = useState<number>(0);
+
+  const [eyeCustomizations, setEyeCustomizations] =
+    useState<ImageType[]>(eyeImages);
+  const [selectedEye, setSelectedEye] = useState<number>(0);
+
   useEffect(() => {
     if (roundsToPlay !== 0 && isHost) {
       socket.emit("change_round_amount", {
@@ -50,6 +71,15 @@ export default function LobbyRoom({
       });
     }
   }, [roundsToPlay]);
+
+  function saveCustomization() {
+    socket.emit("save_customization", {
+      lobbyId: lobbyId,
+      playerId: thisPlayersId,
+      head: selectedHead,
+      eye: selectedEye,
+    });
+  }
 
   function changeUserName() {
     socket.emit("change_username", {
@@ -112,6 +142,83 @@ export default function LobbyRoom({
             save
           </button>
         </div>
+        <div className="player-customization-part-container">
+          <div
+            style={{ top: "90px" }}
+            className="switch-customization-part-buttons"
+          >
+            <button
+              onClick={() =>
+                selectedHead > 0 && setSelectedHead((prev) => prev - 1)
+              }
+            >
+              {" "}
+              &#60;
+            </button>
+            <button
+              onClick={() =>
+                selectedHead < headCustomizations.length - 1 &&
+                setSelectedHead((prev) => prev + 1)
+              }
+            >
+              &#62;
+            </button>
+          </div>
+          <div
+            style={{ top: "150px" }}
+            className="switch-customization-part-buttons"
+          >
+            <button
+              onClick={() =>
+                selectedEye > 0 && setSelectedEye((prev) => prev - 1)
+              }
+            >
+              {" "}
+              &#60;
+            </button>
+            <button
+              onClick={() =>
+                selectedEye < eyeCustomizations.length - 1 &&
+                setSelectedEye((prev) => prev + 1)
+              }
+            >
+              &#62;
+            </button>
+          </div>
+          <div className="lobby-player-body">
+            <img className="lobby-player-body-img" src={body} alt="" />
+          </div>
+          <div className="head-customizations">
+            <img
+              className={`lobby-head-img-${selectedHead}`}
+              src={headCustomizations[selectedHead]}
+              alt=""
+            />
+          </div>
+          <div style={{ top: "120px" }} className="eye-customizations">
+            <img
+              className={`lobby-eye-img-${selectedEye}`}
+              src={eyeCustomizations[selectedEye]}
+              alt=""
+            />
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              position: "absolute",
+              bottom: "0px",
+              width: "100%",
+            }}
+          >
+            <button
+              onClick={saveCustomization}
+              className="save-cutomizations-btn"
+            >
+              save
+            </button>
+          </div>
+        </div>
       </div>
       <div className="lobby-room-container">
         <h1>Lobby Room</h1>
@@ -120,7 +227,24 @@ export default function LobbyRoom({
             <div className="player-grid">
               {playersInLobby?.map((player) => (
                 <div className="lobby-player-card">
-                  <div className="player-character"></div>
+                  <div className="player-card-body">
+                    <img src={body} alt="" />
+                  </div>
+                  <div className="head-customizations">
+                    <img
+                      className={`lobby-head-img-${player.customizations.head}-card`}
+                      src={headCustomizations[player.customizations.head]}
+                      alt=""
+                    />
+                  </div>
+                  <div style={{ top: "65px" }} className="eye-customizations">
+                    <img
+                      className={`lobby-eye-img-${player.customizations.eye}-card`}
+                      src={eyeCustomizations[player.customizations.eye]}
+                      alt=""
+                    />
+                  </div>
+
                   <h3>{player.playerName}</h3>
                 </div>
               ))}
