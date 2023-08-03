@@ -8,10 +8,6 @@ import body from "../../assets/body.png";
 interface IProps {
   headCustomizations: ImageType[];
   eyeCustomizations: ImageType[];
-  selectedHead: number;
-  selectedEye: number;
-  setSelectedHead: React.Dispatch<React.SetStateAction<number>>;
-  setSelectedEye: React.Dispatch<React.SetStateAction<number>>;
 }
 
 type ImageType = string;
@@ -19,10 +15,6 @@ type ImageType = string;
 export default function PlayersList({
   headCustomizations,
   eyeCustomizations,
-  selectedHead,
-  selectedEye,
-  setSelectedHead,
-  setSelectedEye,
 }: IProps) {
   const { playersInLobby, thisPlayersId } = useContext(AppContext);
   const [sortedPlayers, setSortedPlayers] = useState([...playersInLobby]);
@@ -62,11 +54,18 @@ export default function PlayersList({
             style={{ color: player.correctGuess ? "lightgreen" : "white" }}
           >
             <div
-              style={{ transform: "scale(0.6)", background: "none" }}
+              style={{
+                transform: "scale(0.6)",
+                background: "none",
+              }}
               className="lobby-player-card"
             >
               <div className="player-card-body">
-                <img src={body} alt="" />
+                <img
+                  style={{ boxShadow: "0 0 50px rgba(0, 0, 0, 0.5)" }}
+                  src={body}
+                  alt=""
+                />
               </div>
               <div className="head-customizations">
                 <img

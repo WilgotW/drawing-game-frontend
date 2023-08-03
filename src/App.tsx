@@ -165,10 +165,6 @@ function App() {
               <PlayersList
                 headCustomizations={headCustomizations}
                 eyeCustomizations={eyeCustomizations}
-                selectedHead={selectedHead}
-                selectedEye={selectedEye}
-                setSelectedEye={setSelectedEye}
-                setSelectedHead={setSelectedHead}
               />
               <div style={{ display: "flex", flexDirection: "column" }}>
                 <CanvasDrawing
@@ -179,6 +175,8 @@ function App() {
                   randomWords={randomWords}
                   playerChoosingWord={playerChoosingWord}
                   showEndRoundPopup={showEndRoundPopup}
+                  headCustomizations={headCustomizations}
+                  eyeCustomizations={eyeCustomizations}
                 />
               </div>
               <GuessChat playersTurn={playersTurn} />

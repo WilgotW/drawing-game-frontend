@@ -25,9 +25,10 @@ export default function Menu() {
     <div>
       <img
         style={{
-          width: "350px",
-          height: "250px",
+          width: "450px",
+          height: "350px",
           position: "absolute",
+          transform: "translateX(-50px) translateY(-50px)",
         }}
         src={logo}
         alt=""

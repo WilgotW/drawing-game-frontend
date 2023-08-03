@@ -15,7 +15,11 @@ interface IProps {
   randomWords: string[];
   playerChoosingWord: boolean;
   showEndRoundPopup: boolean;
+  headCustomizations: ImageType[];
+  eyeCustomizations: ImageType[];
 }
+
+type ImageType = string;
 export default function CanvasDrawing({
   playersTurn,
   activeColor,
@@ -24,6 +28,8 @@ export default function CanvasDrawing({
   randomWords,
   playerChoosingWord,
   showEndRoundPopup,
+  headCustomizations,
+  eyeCustomizations,
 }: IProps) {
   const { lobbyId, gameOver } = useContext(AppContext);
 
@@ -251,7 +257,10 @@ export default function CanvasDrawing({
           style={{ position: "relative", width: "100%", height: "100%" }}
         >
           {gameOver ? (
-            <GameOverPopup />
+            <GameOverPopup
+              headCustomizations={headCustomizations}
+              eyeCustomizations={eyeCustomizations}
+            />
           ) : (
             <>
               {showEndRoundPopup && <EndRoundSummary />}
