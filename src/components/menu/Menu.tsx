@@ -1,17 +1,12 @@
-import React, { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import { AppContext } from "../../context/AppContext";
 import { socket } from "../../socket";
 import "./Menu.css";
 import logo from "../../assets/Logo.png";
 export default function Menu() {
   const [lobbyInput, setLobbyInput] = useState<string>("");
-  const { setUserName, userName, setPlayersInLobby, playersInLobby } =
-    useContext(AppContext);
-
-  const [lobbyId, setLobbyId] = useState<string>("");
+  const { playersInLobby } = useContext(AppContext);
   const [showJoin, setShowJoin] = useState<boolean>(false);
-
-  socket.on("lobby_msg", (msg) => console.log(msg));
 
   function createLobby() {
     socket.emit("create_lobby", "player");

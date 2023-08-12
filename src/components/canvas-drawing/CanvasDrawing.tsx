@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { socket } from "../../socket";
 import PenOptions from "../pen-options/PenOptions";
 import WordPopup from "../word-popup/WordPopup";
@@ -11,7 +11,6 @@ interface IProps {
   playersTurn: boolean;
   activeColor: string;
   penWidth: number;
-  revealingWord: string;
   randomWords: string[];
   playerChoosingWord: boolean;
   showEndRoundPopup: boolean;
@@ -24,7 +23,6 @@ export default function CanvasDrawing({
   playersTurn,
   activeColor,
   penWidth,
-  revealingWord,
   randomWords,
   playerChoosingWord,
   showEndRoundPopup,
@@ -50,7 +48,7 @@ export default function CanvasDrawing({
   const [sendCount, setSendCount] = useState<number>(0);
   const canvasDataSpeed = 2;
 
-  socket.on("canvas_data", (imgData) => {
+  socket.on("canvas_data", (imgData: string) => {
     if (!playersTurn) {
       processData(imgData);
     }
@@ -75,7 +73,7 @@ export default function CanvasDrawing({
     }
   }, [sendCount]);
 
-  function processData(imgData) {
+  function processData(imgData: string) {
     const canvasDataQueue: any = [];
     let isProcessingCanvasData = false;
 
@@ -183,7 +181,7 @@ export default function CanvasDrawing({
     if (!canvas) return;
     let isMounted = true;
 
-    const handleMouseMove = (event) => {
+    const handleMouseMove = (event: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;

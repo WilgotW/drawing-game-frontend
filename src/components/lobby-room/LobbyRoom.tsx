@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { AppContext } from "../../context/AppContext";
 import "./LobbyRoom.css";
 import { BiCopyAlt } from "react-icons/bi";
@@ -91,16 +91,6 @@ export default function LobbyRoom({
 
   function copyLobbyId() {
     navigator.clipboard.writeText(lobbyId);
-  }
-
-  // function changeRoundAmount(amount: number) {
-  //   if (!isHost) return;
-  //   const am = amount + roundsToPlay;
-  //   setRoundsToPlay(am);
-  // }
-  function changeTimePerGame(_time: number) {
-    if (!isHost) return;
-    setTimePerGame((prev) => prev + _time);
   }
   useEffect(() => {
     if (timePerGame > 0) {

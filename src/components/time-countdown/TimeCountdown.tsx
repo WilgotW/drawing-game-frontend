@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { socket } from "../../socket";
-import { FaBeer } from "react-icons/fa";
 import "./TimeCountdown.css";
 import { AppContext } from "../../context/AppContext";
 import clockSound from "../../sounds/clock-sound.wav";

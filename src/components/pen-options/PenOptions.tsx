@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
-import Slider from "@mui/material/Slider";
+import { useContext, useEffect, useState } from "react";
 import "./PenOptions.css";
 import fetchItems from "../../functions/fetchItems";
 import { IoMdTrash } from "react-icons/io";

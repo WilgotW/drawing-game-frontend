@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../context/AppContext";
 import "./GameOver.css";
 import body from "../../assets/body.png";
@@ -97,9 +97,6 @@ export default function GameOverPopup({
                 </h3>
               )}
             </>
-            
-
-
           ))}
         </div>
       </div>

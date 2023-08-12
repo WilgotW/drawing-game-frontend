@@ -5,25 +5,11 @@ import { socket } from "../../socket";
 
 interface IProps {
   word: string;
-  activeWord: string;
-  setActiveWord: React.Dispatch<React.SetStateAction<string>>;
   allWords: string[];
-  setAllWords: React.Dispatch<React.SetStateAction<string[]>>;
-  randomWords: string[];
   setRandomWords: React.Dispatch<React.SetStateAction<string[]>>;
-  playersTurn: boolean;
 }
 
-export default function WordSystem({
-  word,
-  activeWord,
-  setActiveWord,
-  allWords,
-  setAllWords,
-  randomWords,
-  setRandomWords,
-  playersTurn,
-}: IProps) {
+export default function WordSystem({ word, allWords, setRandomWords }: IProps) {
   const [hiddenWord, setHiddenWord] = useState<string>("");
   const [revealedLetters, setRevealedLetters] = useState<number[]>([]);
 

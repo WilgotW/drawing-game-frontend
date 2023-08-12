@@ -1,5 +1,4 @@
-import React, { useState, useContext } from "react";
-import { socket } from "../../socket";
+import { useContext } from "react";
 import "./EndRoundSummary.css";
 import { AppContext } from "../../context/AppContext";
 

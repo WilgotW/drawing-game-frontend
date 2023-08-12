@@ -58,11 +58,9 @@ function App() {
   const [thisPlayersId, setThisPlayersId] = useState<string>("");
   const [playersTurn, setPlayersTurn] = useState<boolean>(false);
   const [isHost, setIsHost] = useState<boolean>(false);
-  const [headCustomizations, setHeadCustomizations] =
-    useState<ImageType[]>(headImages);
+  const headCustomizations: ImageType[] = headImages;
+  const eyeCustomizations: ImageType[] = eyeImages;
   const [selectedHead, setSelectedHead] = useState<number>(0);
-  const [eyeCustomizations, setEyeCustomizations] =
-    useState<ImageType[]>(eyeImages);
   const [selectedEye, setSelectedEye] = useState<number>(0);
 
   //main
@@ -72,7 +70,7 @@ function App() {
 
   socket.on("get_player_id", (playerId: string) => setThisPlayersId(playerId));
   socket.on("set_lobby_id", (lobbyId: string) => setLobbyId(lobbyId));
-  socket.on("end_round", (data) => {
+  socket.on("end_round", (data: any) => {
     setCorrectWord(data.correctWord);
     setCurrentRound(data.lobbyRound);
     setShowEndRoundPopup(true);
@@ -97,7 +95,7 @@ function App() {
     if (playersList.length === 1 && !isHost) {
       setIsHost(true);
     }
-    const newPlayersInLobby = playersList.map((player) => ({
+    const newPlayersInLobby = playersList.map((player: PlayerProps) => ({
       playerName: player.playerName,
       playerId: player.playerId,
       playersTurn: player.playersTurn,
@@ -171,7 +169,6 @@ function App() {
                   playersTurn={playersTurn}
                   activeColor={activeColor}
                   penWidth={penWidth}
-                  revealingWord={revealingWord}
                   randomWords={randomWords}
                   playerChoosingWord={playerChoosingWord}
                   showEndRoundPopup={showEndRoundPopup}

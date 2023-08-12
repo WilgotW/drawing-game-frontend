@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import "./PlayerList.css";
 import { AppContext } from "../../context/AppContext";
 import popSound from "../../sounds/pop-sound.wav";
