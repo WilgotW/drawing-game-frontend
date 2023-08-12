@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { socket } from "../../socket";
 import "./WordPopup.css";
 import { AppContext } from "../../context/AppContext";

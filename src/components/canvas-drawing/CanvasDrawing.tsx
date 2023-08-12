@@ -84,7 +84,7 @@ export default function CanvasDrawing({
         c?.drawImage(img, 0, 0, canvas!.width, canvas!.height);
 
         if (canvasDataQueue.length > 0) {
-          const nextImgData = canvasDataQueue.shift();
+          canvasDataQueue.shift();
         } else {
           isProcessingCanvasData = false;
         }
