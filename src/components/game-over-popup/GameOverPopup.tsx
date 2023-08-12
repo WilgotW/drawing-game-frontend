@@ -97,6 +97,9 @@ export default function GameOverPopup({
                 </h3>
               )}
             </>
+            
+
+
           ))}
         </div>
       </div>
