@@ -106,6 +106,7 @@ function App() {
       customizations: player.customizations,
     }));
     setPlayersInLobby(newPlayersInLobby);
+    console.log("new player");
   });
 
   socket.on("end_round", () => {
