@@ -1,1 +1,1 @@
-web: node src/main.tsx
+web: bin/start-nginx-solo
