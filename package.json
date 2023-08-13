@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "start": "node src/main.tsx"
+    "start": "vite"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -37,6 +37,7 @@
     "vite": "^4.4.9"
   },
   "engines": {
-    "node": "16.16.0"
+    "node": "16.16.0",
+    "npm": "9.8.1"
   }
 }
