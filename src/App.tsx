@@ -182,7 +182,7 @@ function App() {
           </div>
         ) : (
           <>
-            {playersInLobby.length > 0 ? (
+            {playersInLobby.length > 0 && lobbyId ? (
               <LobbyRoom
                 roundsToPlay={roundsToPlay}
                 setRoundsToPlay={setRoundsToPlay}
