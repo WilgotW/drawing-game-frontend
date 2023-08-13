@@ -1,5 +1,5 @@
 export default function fetchItems(file: string) {
-  return fetch(`../public/${file}`)
+  return fetch(`../${file}`)
     .then((response) => response.text())
     .then((content) => {
       if (content) {
